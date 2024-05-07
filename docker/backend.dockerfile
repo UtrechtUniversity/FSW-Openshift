@@ -49,6 +49,15 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 COPY ./docker/certificates/docker.dev.crt /usr/local/share/ca-certificates
 RUN cd /usr/local/share/ca-certificates && update-ca-certificates
 
+COPY ./docker/docker.env /var/www/.env
+
+# run composer
+RUN composer install
+
+RUN chown www-data /var/www/storage -R
+RUN chmod a+w -R /var/www/storage
+RUN chmod a+w -R /var/www/vendor
+
 # entrypoint
 COPY ./docker/backend-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh

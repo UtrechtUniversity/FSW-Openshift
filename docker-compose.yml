@@ -18,6 +18,8 @@ services:
     container_name: openshift_frontend
     build:
       dockerfile: docker/frontend.dockerfile
+    environment:
+      - APP_ENV=local
     volumes:
       - ./:/var/www/public
     working_dir: /var/www/public

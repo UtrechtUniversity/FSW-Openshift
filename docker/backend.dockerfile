@@ -40,8 +40,6 @@ COPY ./docker/httpd.conf /etc/apache2/sites-enabled/000-default.conf
 # copy webapp files
 COPY .. /var/www
 
-RUN cut -d: -f1 /etc/passwd
-
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
@@ -62,5 +60,5 @@ RUN chmod a+w -R /var/www/vendor
 COPY ./docker/backend-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh
 RUN dos2unix /entrypoint.sh
-USER root
+
 ENTRYPOINT /entrypoint.sh

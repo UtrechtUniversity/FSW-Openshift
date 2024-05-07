@@ -14,6 +14,7 @@ services:
       - VIRTUAL_HOST=openshift.docker.dev
       - VIRTUAL_PROTO=https
       - VIRTUAL_PORT=443
+      - APACHE_SERVER_NAME=openshift.docker.dev
   frontend:
     container_name: openshift_frontend
     build:

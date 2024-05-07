@@ -3,6 +3,8 @@
 dirOwner=$(ls -ld . | awk '{print $3}')
 ls -la
 
+echo "👨 current user: "
+whoami
 echo "👨 Dir owner: $dirOwner"
 
 echo "⭐️ Install npm packages"

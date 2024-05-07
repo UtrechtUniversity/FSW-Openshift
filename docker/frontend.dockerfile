@@ -1,7 +1,5 @@
 FROM node:20-alpine
 
-USER www-data
-
 # entrypoint
 COPY ./docker/frontend-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh

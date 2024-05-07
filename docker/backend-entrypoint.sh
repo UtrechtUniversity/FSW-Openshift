@@ -2,17 +2,14 @@
 dirOwner=$(ls -ld . | awk '{print $3}')
 ls -la
 
+echo "👨 current user: "
+whoami
+
 echo "👨 Dir owner: $dirOwner"
-
-
-
 echo "⭐️ Clean install ${ENVIRONMENT}";
 
 echo "⭐️ Copy .env file";
 cp /var/www/docker/docker.env /var/www/.env
-
-echo "⭐️ generate key";
-php artisan key:generate
 
 # move to webroot directory
 cd /var/www
@@ -31,7 +28,8 @@ chmod a+w -R /var/www/vendor
 echo "⭐️ Run artisan migrate";
 php artisan migrate --seed
 
-
+echo "⭐️ generate key";
+php artisan key:generate
 
 # run apache in foreground
 apache2-foreground

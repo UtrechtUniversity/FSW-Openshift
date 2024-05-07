@@ -52,6 +52,4 @@ COPY ./docker/backend-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh
 RUN dos2unix /entrypoint.sh
 
-USER 1001
-
 ENTRYPOINT /entrypoint.sh

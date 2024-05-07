@@ -2,6 +2,9 @@
 dirOwner=$(ls -ld . | awk '{print $3}')
 ls -la
 
+echo "👨 all user: "
+cut -d: -f1 /etc/passwd
+
 echo "👨 current user: "
 whoami
 

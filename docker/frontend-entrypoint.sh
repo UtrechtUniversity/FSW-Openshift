@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 # get the owner of the current directory
 dirOwner=$(ls -ld . | awk '{print $3}')
+ls -la
+
 echo "👨 Dir owner: $dirOwner"
 
 echo "⭐️ Install npm packages"

@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+dirOwner=$(ls -ld . | awk '{print $3}')
+ls -la
+
+echo "👨 Dir owner: $dirOwner"
+
+
 
 echo "⭐️ Clean install ${ENVIRONMENT}";
 

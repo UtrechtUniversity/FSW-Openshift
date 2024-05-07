@@ -1,0 +1,42 @@
+services:
+  backend:
+    container_name: openshift_backend
+    hostname: openshift.docker.dev
+    build:
+      context: .
+      dockerfile: docker/backend.dockerfile
+    volumes:
+      - ./:/var/www
+    networks:
+      - default
+      - hts-appteam-local-dev
+    environment:
+      - VIRTUAL_HOST=openshift.docker.dev
+      - VIRTUAL_PROTO=https
+      - VIRTUAL_PORT=443
+  frontend:
+    container_name: openshift_frontend
+    build:
+      dockerfile: docker/frontend.dockerfile
+    volumes:
+      - ./:/var/www/public
+    working_dir: /var/www/public
+    ports:
+      - "7050:7050"
+    networks:
+      - default
+      - hts-appteam-local-dev
+  mariadb:
+    hostname: openshift_mariadb.docker.dev
+    container_name: openshift_mariadb
+    image: "mariadb:latest"
+    ports:
+      - "8050:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "development"
+      MYSQL_USER: "development"
+      MYSQL_PASSWORD: "secret"
+networks:
+  hts-appteam-local-dev:
+      external: true

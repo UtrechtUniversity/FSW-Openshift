@@ -9,7 +9,7 @@ RUN apt-get update
 RUN apt-get -y dist-upgrade
 RUN apt-get install -y dos2unix
 
-#RUN apt-get install -y nano
+RUN apt-get install -y sudo nano
 #RUN apt-get install -y git
 #RUN apt-get install -y zip unzip libzip-dev
 #RUN apt-get install -y wget

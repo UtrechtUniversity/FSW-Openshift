@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 dirOwner=$(ls -ld . | awk '{print $3}')
 ls -la
-
+echo "⭐️️️️️⭐️️️️️⭐️️️️️⭐️ VERSIEE: 1"
+️️️️
 echo "👨 all user: "
 cut -d: -f1 /etc/passwd
 

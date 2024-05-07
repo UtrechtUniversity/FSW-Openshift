@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: docker/backend.dockerfile
     volumes:
-      - ./:/var/www
+      - ./:/var/www/html
     networks:
       - default
       - hts-appteam-local-dev
@@ -21,8 +21,8 @@ services:
     environment:
       - APP_ENV=local
     volumes:
-      - ./:/var/www/public
-    working_dir: /var/www/public
+      - ./:/var/www/html/public
+    working_dir: /var/www/html/public
     ports:
       - "7050:7050"
     networks:
@@ -35,7 +35,7 @@ services:
     ports:
       - "8050:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ROOT_PASSWORD: "secret"
       MYSQL_DATABASE: "development"
       MYSQL_USER: "development"
       MYSQL_PASSWORD: "secret"

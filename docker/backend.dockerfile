@@ -1,8 +1,7 @@
 FROM php:8.2.2-apache AS apache
 
 # set workdir
-RUN mkdir -p /var/www/
-WORKDIR /var/www
+WORKDIR /var/www/html
 
 # upgrades!
 RUN apt-get update
@@ -38,7 +37,7 @@ RUN a2enmod headers
 COPY ./docker/httpd.conf /etc/apache2/sites-enabled/000-default.conf
 
 # copy webapp files
-COPY .. /var/www
+COPY .. /var/www/html
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
@@ -47,14 +46,14 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 COPY ./docker/certificates/docker.dev.crt /usr/local/share/ca-certificates
 RUN cd /usr/local/share/ca-certificates && update-ca-certificates
 
-COPY ./docker/docker.env /var/www/.env
+COPY ./docker/docker.env /var/www/html/.env
 
 # run composer
 RUN composer install
 
-RUN chown www-data /var/www/storage -R
-RUN chmod a+w -R /var/www/storage
-RUN chmod a+w -R /var/www/vendor
+RUN chown www-data /var/www/html/storage -R
+RUN chmod a+w -R /var/www/html/storage
+RUN chmod a+w -R /var/www/html/vendor
 
 # entrypoint
 COPY ./docker/backend-entrypoint.sh /entrypoint.sh

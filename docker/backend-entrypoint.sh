@@ -9,5 +9,6 @@ if [ "$APP_ENV" = "local" ]; then
     echo "⭐️ generate key";
     php artisan key:generate
 fi
+whoami
 # run apache in foreground
 apache2-foreground

@@ -19,6 +19,13 @@ RUN apt-get install -y sudo nano
 
 RUN apt-get install -y libxml2-dev libzip-dev libpng-dev
 
+## run apache as non-root user
+# https://takac.dev/docker-run-apache-as-non-root-user-based-on-the-official-image/
+RUN apt-get install -y libcap2-bin procps
+RUN setcap 'cap_net_bind_service=+ep' /usr/local/apache2/bin/httpd
+RUN chown www-data:www-data /usr/local/apache2/logs
+USER www-data
+
 # install additional PHP extensions
 RUN docker-php-ext-install pdo_mysql mysqli soap zip gd
 
@@ -54,6 +61,7 @@ RUN composer install
 RUN chown www-data /var/www/html/storage -R
 RUN chmod a+w -R /var/www/html/storage
 RUN chmod a+w -R /var/www/html/vendor
+RUN php artisan key:generate
 
 # entrypoint
 COPY ./docker/backend-entrypoint.sh /entrypoint.sh

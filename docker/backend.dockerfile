@@ -24,6 +24,7 @@ RUN apt-get install -y libxml2-dev libzip-dev libpng-dev
 RUN apt-get install -y libcap2-bin procps
 RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/apache2-foreground
 RUN chown -R www-data:www-data /var/log/apache2
+RUN chown -R www-data:www-data /usr/local/bin/apache2-foreground
 
 # install additional PHP extensions
 RUN docker-php-ext-install pdo_mysql mysqli soap zip gd
@@ -57,7 +58,7 @@ COPY ./docker/docker.env /var/www/html/.env
 # run composer
 RUN composer install
 
-RUN chown www-data /var/www/html/storage -R
+RUN chown www-data:www-data /var/www/html/storage -R
 RUN chmod a+w -R /var/www/html/storage
 RUN chmod a+w -R /var/www/html/vendor
 RUN php artisan key:generate

@@ -67,4 +67,5 @@ COPY ./docker/backend-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh
 RUN dos2unix /entrypoint.sh
 
+USER www-data
 ENTRYPOINT /entrypoint.sh

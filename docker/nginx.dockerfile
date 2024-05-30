@@ -1,4 +1,6 @@
 FROM nginx:1.10-alpine
+# entrypoint
+COPY ./docker/nginx-entrypoint.sh /entrypoint.sh
+RUN chmod ugo+x /entrypoint.sh
 
-RUN echo "  ⭐️️️️️⭐️️️️️⭐️️️️️⭐️ VERSIE: 1 "
-ADD ./docker/vhost.conf /etc/nginx/conf.d/default.conf
+ENTRYPOINT /entrypoint.sh

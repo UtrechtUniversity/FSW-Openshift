@@ -3,7 +3,8 @@ FROM nginxinc/nginx-unprivileged:stable-alpine
 
 RUN echo "  ⭐️️️️️Bind entrypoint"
 
-# ADD ./docker/vhost.conf /etc/nginx/conf.d/default.conf
+ADD ./docker/vhost.conf /etc/nginx/conf.d/default.conf
+
 USER root
 RUN chown -R nginx:nginx /usr/share/nginx/html
 RUN mkdir -p /var/cache/nginx/client_temp

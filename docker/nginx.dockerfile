@@ -3,4 +3,4 @@ FROM nginxinc/nginx-unprivileged:stable-alpine
 
 RUN echo "  ⭐️️️️️Bind entrypoint"
 
-ADD ./docker/vhost.conf /etc/nginx/conf.d/default.conf
+# ADD ./docker/vhost.conf /etc/nginx/conf.d/default.conf

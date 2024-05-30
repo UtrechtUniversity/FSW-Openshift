@@ -1,6 +1,6 @@
-FROM nginx:1.10-alpine
+FROM nginxinc/nginx-unprivileged:stable-alpine
 # entrypoint
-COPY ./docker/nginx-entrypoint.sh /entrypoint.sh
-RUN chmod ugo+x /entrypoint.sh
 
-ENTRYPOINT /entrypoint.sh
+RUN echo "  ⭐️️️️️Bind entrypoint"
+
+ADD ./docker/vhost.conf /etc/nginx/conf.d/default.conf

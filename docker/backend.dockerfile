@@ -41,7 +41,7 @@ RUN cd /usr/local/share/ca-certificates && update-ca-certificates
 
 COPY ./docker/docker.env /var/www/.env
 
-RUN chown -R www-data:www-data /var/www
+RUN chmod a+w -R /var/www/storage
 RUN php artisan key:generate
 
 # entrypoint
@@ -51,7 +51,9 @@ RUN chmod ugo+x /entrypoint.sh
 RUN php artisan optimize
 
 # Expose port 8443 and start php-fpm server
-# EXPOSE 443
-CMD ["php-fpm"]
+EXPOSE 8080
 
 ENTRYPOINT /entrypoint.sh
+
+CMD ["php-fpm"]
+

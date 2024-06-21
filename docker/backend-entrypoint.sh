@@ -12,4 +12,5 @@ ls -la /var/www
 #    echo "⭐️ generate key";
 #    php artisan key:generate
 #fi
+php artisan serve --host=0.0.0.0 --port=8080
 php-fpm

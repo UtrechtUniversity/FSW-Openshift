@@ -8,7 +8,7 @@ data:
   database-host: mariadb-sample
   database-port-number: '3306'
   database-name: development
-  laravel-storage: /var/www/laravel/
+#  laravel-storage: /var/www/laravel/
 #  wordpress-enable-https: 'yes'
 #  wordpress-enable-reverse-proxy: 'yes'
   # Change the following to your blog name, email, first name and last name

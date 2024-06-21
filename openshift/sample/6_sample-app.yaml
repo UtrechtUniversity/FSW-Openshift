@@ -42,11 +42,11 @@ spec:
                 configMapKeyRef:
                   name: sample-config
                   key: database-name
-            - name: LARAVEL_STORAGE_PATH
-              valueFrom:
-                configMapKeyRef:
-                  name: sample-config
-                  key: laravel-storage
+#            - name: LARAVEL_STORAGE_PATH
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: sample-config
+#                  key: laravel-storage
             - name: LARAVEL_DATABASE_USER
               valueFrom:
                 configMapKeyRef:

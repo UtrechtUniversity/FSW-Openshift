@@ -41,7 +41,7 @@ RUN cd /usr/local/share/ca-certificates && update-ca-certificates
 
 COPY ./docker/docker.env /var/www/.env
 
-RUN chmod a+w -R /var/www/storage
+RUN chmod -R a+rw /var/www/storage
 RUN php artisan key:generate
 
 # entrypoint

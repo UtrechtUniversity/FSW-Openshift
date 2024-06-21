@@ -1,0 +1,44 @@
+name: Docker Image Laravel
+env:
+  # 🖊️ EDIT to change the image registry settings.
+  # Registries such as GHCR, Quay.io, and Docker Hub are supported.
+  IMAGE_REGISTRY: ghcr.io/utrechtuniversity
+  IMAGE_REGISTRY_USER: ${{ github.actor }}
+  IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
+
+
+on:
+  push:
+    branches: [ "master" "develop" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: Nginx
+        tags: ${{ env.IMAGE_TAGS }}
+
+        # If you don't have a Dockerfile/Containerfile, refer to https://github.com/redhat-actions/buildah-build#scratch-build-inputs
+        # Or, perform a source-to-image build using https://github.com/redhat-actions/s2i-build
+        # Otherwise, point this to your Dockerfile/Containerfile relative to the repository root.
+        dockerfiles: |
+          ./openshift/nginx.dockerfile
+    - name: Push to registry
+      id: push-image
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: ${{ env.IMAGE_REGISTRY }}
+        username: ${{ env.IMAGE_REGISTRY_USER }}
+        password: ${{ env.IMAGE_REGISTRY_PASSWORD }}

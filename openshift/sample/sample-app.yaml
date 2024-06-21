@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: sample-app
-          image: ghcr.io/utrechtuniversity/fsw-openshift:e236e3734181
+          image: ghcr.io/utrechtuniversity/fsw-openshift:latest
 #          image: bitnami/laravel:latest
           ports:
             - containerPort: 8080

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo "  ⭐️️️️️⭐️️️️️⭐️️️️️⭐️ VERSIE: 1 "
 # run artisan migrate & seed
-
+ls -la /var/www
 if [ "$APP_ENV" = "local" ]; then
     ## in de dockerfile worden de dev packages verwijderd, dus die moeten we eerst installeren
     php composer.phar install

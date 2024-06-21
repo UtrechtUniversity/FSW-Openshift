@@ -9,3 +9,13 @@ https://www.redhat.com/sysadmin/codeready-containers
 
 Soms wil hij niet starten, dan moet je de vm verwijderen en opnieuw starten:
 `crc cleanup`
+
+
+### Local development:
+Add the following to your /etc/hosts file:
+
+``` 127.0.0.1        openshift.docker.dev```
+
+run the following command in the root of the project:
+
+```docker compose up -d --build```

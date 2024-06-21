@@ -41,6 +41,7 @@ RUN cd /usr/local/share/ca-certificates && update-ca-certificates
 
 COPY ./docker/docker.env /var/www/.env
 
+RUN chown -R www-data:www-data /var/www
 RUN php artisan key:generate
 
 # entrypoint

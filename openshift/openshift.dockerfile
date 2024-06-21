@@ -39,7 +39,7 @@ RUN chmod -R a+rw /var/www/storage
 RUN php artisan key:generate
 
 # entrypoint
-COPY ./docker/backend-entrypoint.sh /entrypoint.sh
+COPY ./openshift/openshift-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh
 
 RUN php artisan optimize

@@ -33,7 +33,7 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 
 RUN composer install
 
-COPY ./docker/openshift.env /var/www/.env
+COPY ./openshift/openshift.env /var/www/.env
 
 RUN chmod -R a+rw /var/www/storage
 RUN php artisan key:generate

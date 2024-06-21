@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  labels:
+    app: fsw-sample-app
+    app.kubernetes.io/part-of: fsw-sample-app
+spec:
+  serviceName: mariadb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: bitnami/mariadb:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "0.3"
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: mariadb-root-password
+            - name: MARIADB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mariadb-config
+                  key: mariadb-database
+            - name: MARIADB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mariadb-config
+                  key: mariadb-user
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: mariadb-password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mariadb-persistent-storage
+              mountPath: /bitnami/mariadb
+  volumeClaimTemplates:
+    - metadata:
+        name: mariadb-persistent-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi

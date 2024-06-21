@@ -5,9 +5,9 @@ metadata:
   name: sample-config
 data:
   database-type: mysql
-  database-host: mariadb
+  database-host: mariadb-sample
   database-port-number: '3306'
-  database-name: openshift_myapp
+  database-name: development
 #  wordpress-enable-https: 'yes'
 #  wordpress-enable-reverse-proxy: 'yes'
   # Change the following to your blog name, email, first name and last name

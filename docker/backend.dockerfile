@@ -10,22 +10,6 @@ RUN apt-get -y dist-upgrade
 RUN apt-get install -y zip
 
 RUN apt-get install -y sudo nano
-#RUN apt-get install -y git
-#RUN apt-get install -y zip unzip libzip-dev
-#RUN apt-get install -y wget
-#RUN apt-get install -y sudo
-#RUN apt-get install -y iputils-ping
-#RUN apt-get install -y locales locales-all
-# RUN apt-get install -y netcat
-
-#RUN apt-get install -y libxml2-dev libzip-dev libpng-dev
-#
-### run apache as non-root user
-## https://takac.dev/docker-run-apache-as-non-root-user-based-on-the-official-image/
-#RUN apt-get install -y libcap2-bin procps
-#RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/apache2
-#RUN chown -R www-data:www-data /var/log/apache2
-# RUN chown -R www-data:www-data /usr/local/bin/apache2-foreground
 
 # install additional PHP extensions
 RUN  apt-get install -y libmcrypt-dev \

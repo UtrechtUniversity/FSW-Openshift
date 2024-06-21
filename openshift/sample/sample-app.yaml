@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fsw-sample-app
+  labels:
+    app: fsw-sample-app
+    app.kubernetes.io/part-of: fsw-sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: sample-app
+          image: ghcr.io/utrechtuniversity/fsw-openshift:e236e3734181
+#          image: bitnami/laravel:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: LARAVEL_DATABASE_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-config
+                  key: database-type
+            - name: LARAVEL_DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-config
+                  key: database-host
+            - name: LARAVEL_DATABASE_PORT_NUMBER
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-config
+                  key: database-port-number
+            - name: LARAVEL_DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-config
+                  key: database-name
+            - name: LARAVEL_DATABASE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mariadb-config
+                  key: mariadb-user
+            - name: LARAVEL_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: mariadb-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fsw-sample-app
+  labels:
+    app: fsw-sample-app
+    app.kubernetes.io/part-of: fsw-sample-app
+spec:
+  selector:
+    app: fsw-sample-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---

@@ -16,8 +16,8 @@ services:
     container_name: openshift_frontend
     build:
       dockerfile: docker/frontend.dockerfile
-    environment:
-      - APP_ENV=local
+      args:
+        - APP_ENV=local
     volumes:
       - ./:/var/www/public
     working_dir: /var/www/public
@@ -33,9 +33,11 @@ services:
       context: ./
       dockerfile: docker/nginx.dockerfile
     environment:
-       - VIRTUAL_HOST=openshift.docker.dev
+       - VIRTUAL_HOST=app.openshift.fss.uu.nl
        - VIRTUAL_PROTO=http
        - VIRTUAL_PORT=80
+       - NGINX_HOST=app.openshift.fss.uu.nl
+       - NGINX_PORT=8080
     volumes:
        - ./:/var/www
        - ./storage/logs/:/var/log/nginx

@@ -19,7 +19,7 @@ create_app() {
 
 # Function to create the list of resource yamls
 delete_app() {
-    search_dir=..
+    search_dir=../sample
     for entry in "$search_dir"/*
     do
       echo "$entry"

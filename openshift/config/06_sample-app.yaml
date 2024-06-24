@@ -21,32 +21,32 @@ spec:
           ports:
             - containerPort: 9000
           env:
-            - name: LARAVEL_DATABASE_TYPE
+            - name: DB_CONNECTION
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-type
-            - name: LARAVEL_DATABASE_HOST
+            - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-host
-            - name: LARAVEL_DATABASE_PORT_NUMBER
+            - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-port-number
-            - name: LARAVEL_DATABASE_NAME
+            - name: DB_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-name
-            - name: LARAVEL_DATABASE_USER
+            - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
                   name: mariadb-config
                   key: mariadb-user
-            - name: LARAVEL_DATABASE_PASSWORD
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mariadb-secret

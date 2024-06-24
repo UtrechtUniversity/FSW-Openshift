@@ -12,8 +12,31 @@ create_app() {
     search_dir=../config
     for entry in "$search_dir"/*
     do
-      echo "$entry"
-      oc apply -f $entry
+        filename=$(basename -- "$entry")
+        if [ -f ../temp/"$filename" ]; then
+            echo "Use previously made file with credentials"
+            oc apply -f ../temp/"$filename"
+            continue
+        fi
+
+        echo "Check for file with credential"
+        match=$(grep -o \<.*\> "$entry" | wc -l)
+        if [ "$match" -ne "0" ]; then
+            echo "Found credentials in file"
+            # TODO: Create loop and ceck ninimal length of password
+            word1=$(shuf -n1 /usr/share/dict/american-english | sed "s/'//g")
+            word2=$(shuf -n1 /usr/share/dict/american-english | sed "s/'//g")
+            word3=$(shuf -n1 /usr/share/dict/american-english | sed "s/'//g")
+            word="${word1}-${word2}-${word3}"
+            echo "used password: $word for $filename"
+            hash="$(echo -n $word | base64)"
+            echo $hash
+            sed "s/<.*>/"$hash"/g" "$entry" > ../temp/"$filename"
+            oc apply -f ../temp/"$filename"
+            continue
+        fi
+        echo "$entry"
+        oc apply -f "$entry"
     done
 }
 

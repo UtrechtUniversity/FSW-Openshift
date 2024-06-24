@@ -9,7 +9,7 @@
 
 # Function to create the list of resource yamls
 create_app() {
-    search_dir=../sample
+    search_dir=../config
     for entry in "$search_dir"/*
     do
       echo "$entry"
@@ -19,11 +19,11 @@ create_app() {
 
 # Function to create the list of resource yamls
 delete_app() {
-    search_dir=../sample
+    search_dir=../config
     for entry in "$search_dir"/*
     do
       echo "$entry"
-      oc delete -f $entry
+      oc delete -f "$entry"
     done
 }
 

@@ -19,7 +19,7 @@ spec:
         - name: sample-app
           image: ghcr.io/utrechtuniversity/fsw-openshift:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 9000
           env:
             - name: LARAVEL_DATABASE_TYPE
               valueFrom:
@@ -56,19 +56,3 @@ spec:
                 secretKeyRef:
                   name: mariadb-secret
                   key: mariadb-password
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fsw-sample-app
-  labels:
-    app: fsw-sample-app
-    app.kubernetes.io/part-of: fsw-sample-app
-spec:
-  selector:
-    app: fsw-sample-app
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
----

@@ -26,27 +26,27 @@ spec:
                 configMapKeyRef:
                   name: sample-config
                   key: database-type
-            - name: DB_HOST
+            - name: OPENSHIFT_MYSQL_DB_HOST
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-host
-            - name: DB_PORT
+            - name: OPENSHIFT_MYSQL_DB_PORT
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-port-number
-            - name: DB_DATABASE
+            - name: OPENSHIFT_APP_NAME
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-name
-            - name: DB_USERNAME
+            - name: OPENSHIFT_MYSQL_DB_USERNAME
               valueFrom:
                 configMapKeyRef:
                   name: mariadb-config
                   key: mariadb-user
-            - name: DB_PASSWORD
+            - name: OPENSHIFT_MYSQL_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mariadb-secret

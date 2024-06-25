@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Str;
 
+
+var_dump(getenv('LARAVEL_DATABASE_HOST'));
 return [
 
     /*

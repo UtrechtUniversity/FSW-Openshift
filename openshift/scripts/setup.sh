@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "⭐️ Load Laravel Setup";
 # Load libraries
+. /var/www/openshift/scripts/libvalidations.sh
 . /var/www/openshift/scripts/liblaravel.sh
 
 # Load Laravel environment

@@ -36,6 +36,7 @@ RUN composer install
 COPY ./openshift/openshift.env /var/www/.env
 
 RUN chmod -R a+rw /var/www/storage
+RUN chmod -R a+rw /var/www/bootstrap/cache
 RUN php artisan key:generate
 
 # entrypoint

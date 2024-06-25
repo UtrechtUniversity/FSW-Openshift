@@ -6,6 +6,7 @@ pwd
 
 /var/www/openshift/scripts/setup.sh
 
+
 # run artisan migrate & seed
 echo "⭐️ Run artisan migrate";
 php artisan migrate --seed

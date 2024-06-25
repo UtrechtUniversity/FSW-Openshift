@@ -5,10 +5,9 @@ echo "⭐️ Load Laravel Setup";
 
 # Load Laravel environment
 . /var/www/openshift/scripts/laravel-env.sh
+. /var/www/openshift/scripts/liblog.sh
 
 # Ensure Laravel environment variables are valid
 laravel_validate
 
-# Ensure Laravel app is initialized
-laravel_initialize
 

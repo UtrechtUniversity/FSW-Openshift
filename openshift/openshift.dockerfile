@@ -10,6 +10,10 @@ RUN apt-get -y dist-upgrade
 RUN apt-get install -y zip
 
 RUN apt-get install -y sudo nano
+RUN apt-get install -y mariadb-client
+
+# install mysql
+RUN docker-php-ext-install pdo_mysql mysqli
 
 # install additional PHP extensions
 RUN  apt-get install -y libmcrypt-dev \

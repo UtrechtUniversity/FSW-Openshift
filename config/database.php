@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Str;
 
-
-var_dump(getenv('LARAVEL_DATABASE_HOST'));
 return [
 
     /*
@@ -48,11 +46,11 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host'      => getenv('LARAVEL_DATABASE_HOST'),
-            'database'  => getenv('LARAVEL_DATABASE_NAME'),
-            'username'  => getenv('LARAVEL_DATABASE_USER'),
-            'password'  => getenv('LARAVEL_DATABASE_PASSWORD'),
-            'port'      => getenv('LARAVEL_DATABASE_PORT_NUMBER'),
+            'host'      => env('DB_HOST', getenv('LARAVEL_DATABASE_HOST')),
+            'database'  => env('DB_DATABASE', getenv('LARAVEL_DATABASE_NAME')),
+            'username'  => env('DB_USERNAME', getenv('LARAVEL_DATABASE_USER')),
+            'password'  => env('DB_PASSWORD', getenv('LARAVEL_DATABASE_PASSWORD')),
+            'port'      => env('DB_PORT', getenv('LARAVEL_DATABASE_PORT_NUMBER')),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

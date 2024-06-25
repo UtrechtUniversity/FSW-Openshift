@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 echo "  ⭐️️️️️⭐️️️️️⭐️️️️️⭐️ VERSIE: 1 "
 
-echo "⭐️ Load Laravel environment";
-pwd
-
-#/var/www/openshift/scripts/setup.sh
-
+php artisan config:clear
 
 # run artisan migrate & seed
 echo "⭐️ Run artisan migrate";

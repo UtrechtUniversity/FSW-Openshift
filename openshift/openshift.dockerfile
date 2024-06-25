@@ -36,24 +36,23 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 # run composer
 
 RUN composer install
-## TODO eigenlijk wil je een image zonder  dev packages.
-##RUN composer install --no-dev --no-scripts
 
-# install self signed certifcates to thrust other local dev environments
-COPY ./docker/certificates/docker.dev.crt /usr/local/share/ca-certificates
-RUN cd /usr/local/share/ca-certificates && update-ca-certificates
-
-COPY ./docker/docker.env /var/www/.env
+COPY ./openshift/openshift.env /var/www/.env
 
 RUN chmod -R a+rw /var/www/storage
+RUN chmod -R a+rw /var/www/bootstrap/cache
 RUN php artisan key:generate
 
 # entrypoint
-COPY ./docker/backend-entrypoint.sh /entrypoint.sh
+COPY ./openshift/openshift-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh
 
 RUN php artisan optimize
 
+# Expose port 8443 and start php-fpm server
+EXPOSE 8080
+
 ENTRYPOINT /entrypoint.sh
 
 CMD ["php-fpm"]
+

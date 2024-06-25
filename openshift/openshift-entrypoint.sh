@@ -4,7 +4,7 @@ echo "  ⭐️️️️️⭐️️️️️⭐️️️️️⭐️ VERSIE: 1 "
 echo "⭐️ Load Laravel environment";
 pwd
 
-./openshift/scripts/laravel-env.sh
+. /var/www/openshift/scripts/laravel-env.sh
 
 # run artisan migrate & seed
 echo "⭐️ Run artisan migrate";

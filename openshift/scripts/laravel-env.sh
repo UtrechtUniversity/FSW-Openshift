@@ -1,8 +1,6 @@
 #!/bin/bash
-# Copyright Broadcom, Inc. All Rights Reserved.
-# SPDX-License-Identifier: APACHE-2.0
-#
-# Environment configuration for laravel
+
+echo "⭐️ Load Laravel Environment Variables";
 
 # The values for all environment variables will be set in the below order of precedence
 # 1. Custom environment variables defined below after Bitnami defaults

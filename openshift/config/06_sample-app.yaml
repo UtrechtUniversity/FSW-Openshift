@@ -21,32 +21,32 @@ spec:
           ports:
             - containerPort: 9000
           env:
-            - name: DB_CONNECTION
+            - name: LARAVEL_DATABASE_TYPE
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-type
-            - name: OPENSHIFT_MYSQL_DB_HOST
+            - name: LARAVEL_DATABASE_HOST
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-host
-            - name: OPENSHIFT_MYSQL_DB_PORT
+            - name: LARAVEL_DATABASE_PORT_NUMBER
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-port-number
-            - name: OPENSHIFT_APP_NAME
+            - name: LARAVEL_DATABASE_NAME
               valueFrom:
                 configMapKeyRef:
                   name: sample-config
                   key: database-name
-            - name: OPENSHIFT_MYSQL_DB_USERNAME
+            - name: LARAVEL_DATABASE_USER
               valueFrom:
                 configMapKeyRef:
                   name: mariadb-config
                   key: mariadb-user
-            - name: OPENSHIFT_MYSQL_DB_PASSWORD
+            - name: LARAVEL_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mariadb-secret

@@ -99,16 +99,16 @@ debug() {
 # Returns:
 #   None
 #########################
-indent() {
-    local string="${1:-}"
-    local num="${2:?missing num}"
-    local char="${3:-" "}"
-    # Build the indentation unit string
-    local indent_unit=""
-    for ((i = 0; i < num; i++)); do
-        indent_unit="${indent_unit}${char}"
-    done
-    # shellcheck disable=SC2001
-    # Complex regex, see https://github.com/koalaman/shellcheck/wiki/SC2001#exceptions
-    echo "$string" | sed "s/^/${indent_unit}/"
-}
+#indent() {
+#    local string="${1:-}"
+#    local num="${2:?missing num}"
+#    local char="${3:-" "}"
+#    # Build the indentation unit string
+#    local indent_unit=""
+#    for ((i = 0; i < num; i++)); do
+#        indent_unit="${indent_unit}${char}"
+#    done
+#    # shellcheck disable=SC2001
+#    # Complex regex, see https://github.com/koalaman/shellcheck/wiki/SC2001#exceptions
+#    echo "$string" | sed "s/^/${indent_unit}/"
+#}

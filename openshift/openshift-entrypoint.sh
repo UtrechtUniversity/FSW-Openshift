@@ -2,6 +2,8 @@
 echo "  ⭐️️️️️⭐️️️️️⭐️️️️️⭐️ VERSIE: 1 "
 
 echo "⭐️ Load Laravel environment";
+pwd
+
 ./laravel-env.sh
 
 # run artisan migrate & seed

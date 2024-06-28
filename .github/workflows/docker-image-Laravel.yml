@@ -19,6 +19,8 @@ jobs:
       id: build-image
       uses: redhat-actions/buildah-build@v2
       env:
+        COMPOSER_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+        COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.ACCESS_TOKEN_GITHUB}}"} }' # [tl! **]
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
         github_token: ${{ secrets.ACCESS_TOKEN_GITHUB }}
       with:

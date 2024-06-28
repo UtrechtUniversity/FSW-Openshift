@@ -18,6 +18,8 @@ jobs:
     - name: Build from Dockerfile
       id: build-image
       uses: redhat-actions/buildah-build@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
       with:
         image: fsw-openshift
         tags: latest

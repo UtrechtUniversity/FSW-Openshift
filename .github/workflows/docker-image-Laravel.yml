@@ -20,6 +20,8 @@ jobs:
       uses: redhat-actions/buildah-build@v2
       env:
         COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+        COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH_JSON }}"} }'
       with:
         image: fsw-openshift
         tags: latest

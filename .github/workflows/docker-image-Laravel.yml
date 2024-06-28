@@ -7,7 +7,7 @@ env:
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
 on:
   push:
-    branches: [ "master", "develop", "feature/da_opschonen"]
+    branches: [ "master", "develop", "feature/da_add_la_basepackage"]
   pull_request:
     branches: [ "master" ]
 jobs:
@@ -19,7 +19,7 @@ jobs:
       id: build-image
       uses: redhat-actions/buildah-build@v2
       env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+        COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH_JSON }}"} }'
       with:
         image: fsw-openshift
         tags: latest

@@ -19,9 +19,8 @@ jobs:
       id: build-image
       uses: redhat-actions/buildah-build@v2
       env:
-        COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
-        COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH_JSON }}"} }'
+        env:
+        GITHUB_TOKEN: ${{ github.token }}
       with:
         image: fsw-openshift
         tags: latest

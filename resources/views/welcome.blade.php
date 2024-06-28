@@ -13,8 +13,12 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-
-                        {{ __('You are logged in!') }}
+                        @auth()
+                            {{ __( Auth::user()->name . ' You are logged in!') }}
+                            {{ 'Je hebt de rol: ' . Auth::user()->role->name}}
+                        @else
+                            {{ __('You are not logged in!') }}
+                        @endauth
                     </div>
                 </div>
             </div>

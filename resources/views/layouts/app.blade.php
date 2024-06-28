@@ -29,7 +29,6 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/hts-appteam-livewire/appteam-livewire.js'])
-    @livewireStyles
 </head>
 
 <body>
@@ -37,6 +36,5 @@
     <main class="py-5">
         @yield('content')
     </main>
-    @livewireScripts
 </body>
 </html>

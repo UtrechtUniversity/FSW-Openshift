@@ -37,8 +37,8 @@ COPY .. /var/www
 # install & run composer
 #COPY ./docker/auth.json /root/.composer/auth.json
 
-#RUN echo ${ COMPOSER_AUTH }
-#RUN echo ${ env.COMPOSER_AUTH }
+RUN echo ${{COMPOSER_AUTH}}
+RUN echo ${{env.COMPOSER_AUTH}}
 
 #RUN echo ${COMPOSER_AUTH_JSON}
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
@@ -47,7 +47,7 @@ RUN composer diagnose
 # run composer
 
 # run composer
-RUN composer config --global --auth github-oauth.github.com ${env.COMPOSER_AUTH}
+RUN composer config --global --auth github-oauth.github.com ${{ env.COMPOSER_AUTH }}
 
 RUN composer diagnose
 

@@ -25,8 +25,7 @@ jobs:
         with:
           script: |
             const secrets = {
-              COMPOSER_AUTH: `${{ secrets.COMPOSER_AUTH }}`,
-              COMPOSER_AUTH_JSON: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
+              COMPOSER_AUTH: `${{ secrets.COMPOSER_AUTH }}`
             };
       - name: Build from Dockerfile
         id: build-image

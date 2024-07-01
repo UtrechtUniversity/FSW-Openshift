@@ -45,7 +45,14 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY .. /var/www
 
 # install & run composer
-COPY ./docker/auth.json /root/.composer/auth.json
+    #COPY ./docker/auth.json /root/.composer/auth.json
+RUN echo "COMPOSER_TOKEN"
+RUN echo $(COMPOSER_TOKEN)
+RUN echo "GITHUB_TOKEN""
+RUN echo $(GITHUB_TOKEN)
+RUN echo "COMPOSER_AUTH"
+RUN echo $(COMPOSER_AUTH) > /root/.composer/auth.json
+
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 # run composer
 

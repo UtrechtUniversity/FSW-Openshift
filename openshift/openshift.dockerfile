@@ -39,6 +39,7 @@ COPY .. /var/www
 
 RUN echo $ENVS
 
+RUN echo $COMPOSER_AUTH
 
 #RUN echo ${COMPOSER_AUTH_JSON}
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
@@ -47,7 +48,7 @@ RUN composer diagnose
 # run composer
 
 # run composer
-RUN composer config --global --auth github-oauth.github.com $ENVS
+RUN composer config --global --auth github-oauth.github.com $COMPOSER_AUTH
 
 RUN composer diagnose
 

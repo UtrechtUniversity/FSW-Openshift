@@ -37,6 +37,8 @@ jobs:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN_GITHUB}}"} }' # [tl! **]
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
         with:
+          image: fsw-openshift
+          tags: latest
           dockerfiles: |
             ./openshift/openshift.dockerfile
       - name: Push to registry

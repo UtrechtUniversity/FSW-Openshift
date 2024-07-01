@@ -25,10 +25,11 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2
         env:
-          COMPOSER_AUTH: ${{ env.COMPOSER_AUTH }}
+          composer_auth: 'test123123123'
+          #${{ env.COMPOSER_AUTH }}
 #          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ env.COMPOSER_AUTH }}"} }' # [tl! **]
         with:
-          envs: ${{ env.COMPOSER_AUTH }}
+          envs:  'testABABAABABA'
           image: fsw-openshift
           tags: latest
           dockerfiles: |

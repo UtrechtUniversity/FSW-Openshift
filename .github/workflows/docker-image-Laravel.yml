@@ -10,9 +10,9 @@ env:
   GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
 on:
   push:
-    branches: [ "master", "develop", "feature/da_add_la_basepackage"]
+    branches: [ "master", "develop"]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "develop"]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,9 +21,15 @@ jobs:
       - name: Build from Dockerfile
         id: build-image
         uses: redhat-actions/buildah-build@v2
+        env:
+          # 🖊️ EDIT to change the image registry settings.
+          # Registries such as GHCR, Quay.io, and Docker Hub are supported.
+          COMPOSER_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.ACCESS_TOKEN_GITHUB}}"} }' # [tl! **]
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
         with:
           image: fsw-openshift
-          tags: latest develop
+          tags: latest
           dockerfiles: |
             ./openshift/openshift.dockerfile
       - name: Push to registry

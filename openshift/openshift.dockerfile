@@ -44,6 +44,7 @@ RUN cat /root/.composer/auth.json
 #RUN echo ${COMPOSER_AUTH_JSON}
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
+RUN composer diagnose
 # run composer
 #RUN composer config --global --auth github-oauth.github.com ${COMPOSER_AUTH}
 RUN  composer install --prefer-dist --no-suggest --no-progress --no-interaction

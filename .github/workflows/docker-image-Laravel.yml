@@ -24,15 +24,12 @@ jobs:
       - name: Build from Dockerfile
         id: build-image
         uses: redhat-actions/buildah-build@v2
-        run: | 
-          curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
-          composer config --global --auth github-oauth.github.com ${{ COMPOSER_AUTH }}
-#          COMPOSER_AUTH: 'test123123123'
-#          #${{ env.COMPOSER_AUTH }}
+        env:
+          COMPOSER_AUTH: 'test123123123'
+          #${{ env.COMPOSER_AUTH }}
 #          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ env.COMPOSER_AUTH }}"} }' # [tl! **]
         with:
-          envs:
-            string: 'test123123123'
+          envs:  'testABABAABABA'
           image: fsw-openshift
           tags: latest
           dockerfiles: |

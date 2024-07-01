@@ -24,8 +24,9 @@ jobs:
       - name: Build from Dockerfile
         id: build-image
         uses: redhat-actions/buildah-build@v2
-        with:
+        env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ env.COMPOSER_AUTH }}"} }' # [tl! **]
+        with:
           image: fsw-openshift
           tags: latest
           dockerfiles: |

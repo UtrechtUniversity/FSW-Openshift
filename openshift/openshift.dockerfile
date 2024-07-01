@@ -36,7 +36,6 @@ COPY .. /var/www
 
 # install & run composer
 #COPY ./docker/auth.json /root/.composer/auth.json
-RUN ${which sh}
 
 # RUN #composer diagnose
 #RUN echo ${COMPOSER_AUTH_JSON}

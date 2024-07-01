@@ -43,6 +43,7 @@ RUN echo ${ENV}
 RUN echo ${COMPOSER_AUTH}
 RUN echo ${composer_auth}
 
+# RUN #composer diagnose
 #RUN echo ${COMPOSER_AUTH_JSON}
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 

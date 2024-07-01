@@ -13,7 +13,7 @@ RUN apt-get -qq install -y sudo nano
 RUN apt-get -qq install -y mariadb-client
 
 RUN apt-get -qq install -y libonig-dev
-RUN apt-get -qq install -y gnupg git
+RUN apt-get -qq install -y curl gnupg git
 
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli
@@ -33,26 +33,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # copy webapp files
 COPY .. /var/www
-
-# install & run composer
-#COPY ./docker/auth.json /root/.composer/auth.json
-
-ARG COMPOSER_AUTH='"TempToken"'
-ENV GIT_AUTH_TOKEN=${COMPOSER_AUTH}
-# RUN #composer diagnose
-#RUN echo ${COMPOSER_AUTH_JSON}
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-
-RUN composer diagnose
-# run composer
-
-# run composer
-RUN composer config --global --auth github-oauth.github.com $GIT_AUTH_TOKEN
-
-RUN composer diagnose
-
-RUN composer install --prefer-dist --no-suggest --no-progress --no-interaction
-#RUN composer install --prefer-dist --no-suggest --no-progress
 
 COPY ./openshift/openshift.env /var/www/.env
 

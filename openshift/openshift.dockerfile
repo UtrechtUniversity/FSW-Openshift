@@ -39,14 +39,20 @@ COPY .. /var/www
 
 #RUN echo ${ COMPOSER_AUTH }
 #RUN echo ${ env.COMPOSER_AUTH }
-RUN echo ${COMPOSER_AUTH} > /root/.composer/auth.json
-RUN cat /root/.composer/auth.json
+
 #RUN echo ${COMPOSER_AUTH_JSON}
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 RUN composer diagnose
 # run composer
-#RUN composer config --global --auth github-oauth.github.com ${COMPOSER_AUTH}
+RUN composer config --global --auth github-oauth.github.com ${COMPOSER_AUTH}
+
+RUN composer diagnose
+# run composer
+RUN composer config --global --auth github-oauth.github.com ${env.COMPOSER_AUTH}
+
+RUN composer diagnose
+
 RUN  composer install --prefer-dist --no-suggest --no-progress --no-interaction
 #RUN composer install --prefer-dist --no-suggest --no-progress
 

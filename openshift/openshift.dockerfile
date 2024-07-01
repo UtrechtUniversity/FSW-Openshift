@@ -45,9 +45,7 @@ RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/lo
 
 RUN composer diagnose
 # run composer
-RUN composer config --global --auth github-oauth.github.com ${COMPOSER_AUTH}
 
-RUN composer diagnose
 # run composer
 RUN composer config --global --auth github-oauth.github.com ${env.COMPOSER_AUTH}
 

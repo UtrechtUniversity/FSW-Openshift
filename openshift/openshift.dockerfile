@@ -37,6 +37,8 @@ COPY .. /var/www
 # install & run composer
 #COPY ./docker/auth.json /root/.composer/auth.json
 
+ARG COMPOSER_AUTH='"TempToken"'
+ENV GIT_AUTH_TOKEN=${COMPOSER_AUTH}
 # RUN #composer diagnose
 #RUN echo ${COMPOSER_AUTH_JSON}
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
@@ -45,7 +47,7 @@ RUN composer diagnose
 # run composer
 
 # run composer
-RUN composer config --global --auth github-oauth.github.com ${secret.GIT_AUTH_TOKEN}
+RUN composer config --global --auth github-oauth.github.com $GIT_AUTH_TOKEN
 
 RUN composer diagnose
 

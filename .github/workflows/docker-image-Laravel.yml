@@ -53,6 +53,8 @@ jobs:
             push: true
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
+            argument: |
+              COMPOSER_AUTH=${{ secrets.COMPOSER_AUTH }}
             secrets: |
               GIT_AUTH_TOKEN=${{ secrets.COMPOSER_AUTH }}
       

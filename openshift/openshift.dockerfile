@@ -36,7 +36,7 @@ COPY .. /var/www
 
 # install & run composer
 #COPY ./docker/auth.json /root/.composer/auth.json
-RUN echo ${COMPSER_AUTH}
+RUN echo $(COMPOSER_AUTH)
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 # run composer

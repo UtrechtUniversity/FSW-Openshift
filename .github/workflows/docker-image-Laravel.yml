@@ -5,16 +5,14 @@ env:
   IMAGE_REGISTRY: ghcr.io/utrechtuniversity
   IMAGE_REGISTRY_USER: ${{ github.actor }}
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
-  COMPOSER_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
   COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.ACCESS_TOKEN_GITHUB}}"} }' # [tl! **]
-  GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
   # 🖊️ EDIT to specify custom tags for the container image, or default tags will be generated below.
   IMAGE_TAGS: "latest"
 on:
   push:
     branches: [ "master", "develop"]
   pull_request:
-    branches: [ "master", "develop"]
+    branches: [ "master", "feature/**"]
     types: ["assigned", "opened", "synchronize", "reopened", "edited"]
 jobs:
   build:
@@ -33,9 +31,7 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2
         env:
-          COMPOSER_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN_GITHUB}}"} }' # [tl! **]
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
         with:
           image: fsw-openshift
           tags: latest

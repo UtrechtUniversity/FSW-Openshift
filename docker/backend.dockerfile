@@ -6,25 +6,25 @@ WORKDIR /var/www
 
 # upgrades!
 RUN apt-get update
-RUN apt-get -y -qq dist-upgrade
-RUN apt-get install -y -qq zip
+RUN apt-get -qq dist-upgrade -y
+RUN apt-get -qq install -y zip
 
-RUN apt-get install -y -qq sudo nano
-RUN apt-get install -y -qq mariadb-client
+RUN apt-get -qq install -y sudo nano
+RUN apt-get -qq install -y mariadb-client
 
-RUN apt-get install -y -qq libonig-dev
-RUN apt-get install -y -qq ca-certificates curl gnupg
+RUN apt-get -qq install -y libonig-dev
+RUN apt-get -qq install -y ca-certificates curl gnupg
 
 # required for sending mail.
-RUN apt-get install -y -qq sendmail
-RUN apt-get install -y -qq libzip-dev
-RUN apt-get install -y -qq zlib1g-dev
+RUN apt-get -qq install -y sendmail
+RUN apt-get -qq install -y libzip-dev
+RUN apt-get -qq install -y zlib1g-dev
 
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli
 
 # install additional PHP extensions
-RUN  apt-get install -y -qq libmcrypt-dev \
+RUN  apt-get -qq install -y libmcrypt-dev \
         libmagickwand-dev --no-install-recommends \
         && pecl install mcrypt-1.0.7 \
         && docker-php-ext-install pdo_mysql \
@@ -48,7 +48,7 @@ COPY .. /var/www
     #COPY ./docker/auth.json /root/.composer/auth.json
 RUN echo "COMPOSER_TOKEN"
 RUN echo $(COMPOSER_TOKEN)
-RUN echo "GITHUB_TOKEN""
+RUN echo "GITHUB_TOKEN"
 RUN echo $(GITHUB_TOKEN)
 RUN echo "COMPOSER_AUTH"
 RUN echo $(COMPOSER_AUTH) > /root/.composer/auth.json

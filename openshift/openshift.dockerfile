@@ -13,7 +13,7 @@ RUN apt-get -qq install -y sudo nano
 RUN apt-get -qq install -y mariadb-client
 
 RUN apt-get -qq install -y libonig-dev
-RUN apt-get -qq install -y curl gnupg
+RUN apt-get -qq install -y curl gnupg git
 
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli

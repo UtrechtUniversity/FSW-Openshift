@@ -17,21 +17,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Build from Dockerfile
-      id: build-image
-      uses: redhat-actions/buildah-build@v2
-      with:
-        image: fsw-openshift
-        tags: latest
-        dockerfiles: |
-          ./openshift/openshift.dockerfile
-    - name: Push to registry
-      id: push-image
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        image: ${{ steps.build-image.outputs.image }}
-        tags: ${{ steps.build-image.outputs.tags }}
-        registry: ${{ env.IMAGE_REGISTRY }}
-        username: ${{ env.IMAGE_REGISTRY_USER }}
-        password: ${{ env.IMAGE_REGISTRY_PASSWORD }}
+      - uses: actions/checkout@v4
+      - name: Build from Dockerfile
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: fsw-openshift
+          tags: latest
+          dockerfiles: |
+            ./openshift/openshift.dockerfile
+      - name: Push to registry
+        id: push-image
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: ${{ env.IMAGE_REGISTRY }}
+          username: ${{ env.IMAGE_REGISTRY_USER }}
+          password: ${{ env.IMAGE_REGISTRY_PASSWORD }}

@@ -13,7 +13,7 @@ RUN apt-get -qq install -y sudo nano
 RUN apt-get -qq install -y mariadb-client
 
 RUN apt-get -qq install -y libonig-dev
-RUN apt-get -qq install -y curl gnupg git
+RUN apt-get -qq install -y gnupg git
 
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli
@@ -36,11 +36,11 @@ COPY .. /var/www
 
 # install & run composer
 #COPY ./docker/auth.json /root/.composer/auth.json
-RUN echo ${secret.GIT_AUTH_TOKEN}
+RUN ${which sh}
 
 # RUN #composer diagnose
 #RUN echo ${COMPOSER_AUTH_JSON}
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN composer diagnose
 # run composer

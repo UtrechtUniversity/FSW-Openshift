@@ -5,7 +5,7 @@ COPY composer.lock composer.json /var/www/
 WORKDIR /var/www
 
 # upgrades!
-RUN apt-get update
+RUN apt-get update -y
 RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y zip
 

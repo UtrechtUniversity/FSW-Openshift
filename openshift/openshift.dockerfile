@@ -41,7 +41,7 @@ RUN echo $GIT_AUTH_TOKEN
 
 # RUN #composer diagnose
 #RUN echo ${COMPOSER_AUTH_JSON}
-curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 RUN composer diagnose
 # run composer

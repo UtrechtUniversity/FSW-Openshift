@@ -28,7 +28,7 @@ jobs:
           COMPOSER_AUTH: ${{ env.COMPOSER_AUTH }}
 #          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ env.COMPOSER_AUTH }}"} }' # [tl! **]
         with:
-          env: ${{ env.COMPOSER_AUTH }}
+          COMPOSER_AUTH: ${{ env.COMPOSER_AUTH }}
           image: fsw-openshift
           tags: latest
           dockerfiles: |

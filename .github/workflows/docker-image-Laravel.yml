@@ -19,9 +19,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Check for required secrets
-        uses: actions/github-script@v6
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Build from Dockerfile
         id: build-image
         uses: redhat-actions/buildah-build@v2

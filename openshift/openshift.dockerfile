@@ -36,10 +36,11 @@ COPY .. /var/www
 
 # install & run composer
 #COPY ./docker/auth.json /root/.composer/auth.json
+RUN echo ${COMPSER_AUTH}
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 # run composer
-RUN composer install
+RUN composer install --prefer-dist --no-suggest --no-progress
 
 COPY ./openshift/openshift.env /var/www/.env
 

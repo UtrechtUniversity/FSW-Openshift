@@ -5,7 +5,7 @@ env:
   IMAGE_REGISTRY: ghcr.io/utrechtuniversity
   IMAGE_REGISTRY_USER: ${{ github.actor }}
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
-  COMPOSER_AUTH: {{secrets.COMPOSER_AUTH}}
+  COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
   COMPOSER_AUTH_JSON: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
   # 🖊️ EDIT to specify custom tags for the container image, or default tags will be generated below.
   IMAGE_TAGS: "latest"

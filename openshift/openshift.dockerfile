@@ -39,7 +39,9 @@ COPY .. /var/www
 
 #RUN echo ${ COMPOSER_AUTH }
 #RUN echo ${ env.COMPOSER_AUTH }
-#RUN echo ${COMPOSER_AUTH_JSON} > /root/.composer/auth.json
+RUN cat /root/.composer/auth.json
+RUN echo ${COMPOSER_AUTH} > /root/.composer/auth.json
+RUN cat /root/.composer/auth.json
 #RUN echo ${COMPOSER_AUTH_JSON}
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 

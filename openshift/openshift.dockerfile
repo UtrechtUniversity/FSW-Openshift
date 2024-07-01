@@ -37,21 +37,21 @@ COPY .. /var/www
 # install & run composer
 #COPY ./docker/auth.json /root/.composer/auth.json
 
-RUN echo $GIT_AUTH_TOKEN
+RUN echo ${GIT_AUTH_TOKEN}
 
 # RUN #composer diagnose
 #RUN echo ${COMPOSER_AUTH_JSON}
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
-RUN composer diagnose
+RUN sudo -u www-data composer diagnose
 # run composer
 
 # run composer
-RUN composer config --global --auth github-oauth.github.com $GIT_AUTH_TOKEN
+RUN sudo -u www-data  composer config --global --auth github-oauth.github.com ${GIT_AUTH_TOKEN}
 
-RUN composer diagnose
+RUN sudo -u www-data  composer diagnose
 
-RUN  composer install --prefer-dist --no-suggest --no-progress --no-interaction
+RUN sudo -u www-data composer install --prefer-dist --no-suggest --no-progress --no-interaction
 #RUN composer install --prefer-dist --no-suggest --no-progress
 
 COPY ./openshift/openshift.env /var/www/.env

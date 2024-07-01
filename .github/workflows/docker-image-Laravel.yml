@@ -5,7 +5,8 @@ env:
   IMAGE_REGISTRY: ghcr.io/utrechtuniversity
   IMAGE_REGISTRY_USER: ${{ github.actor }}
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
-  COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
+  COMPOSER_AUTH: {{secrets.COMPOSER_AUTH}}
+  COMPOSER_AUTH_JSON: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
   # 🖊️ EDIT to specify custom tags for the container image, or default tags will be generated below.
   IMAGE_TAGS: "latest"
 on:
@@ -25,12 +26,14 @@ jobs:
           script: |
             const secrets = {
               COMPOSER_AUTH: `${{ secrets.COMPOSER_AUTH }}`,
+              COMPOSER_AUTH_JSON: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
             };
       - name: Build from Dockerfile
         id: build-image
         uses: redhat-actions/buildah-build@v2
         env:
-          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH}}"} }' # [tl! **]
+          COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+          COMPOSER_AUTH_JSON: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
         with:
           image: fsw-openshift
           tags: latest

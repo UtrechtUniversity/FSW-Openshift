@@ -23,7 +23,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: fsw-openshift
-          tags: latest
+          tags: latest develop
           dockerfiles: |
             ./openshift/openshift.dockerfile
       - name: Push to registry

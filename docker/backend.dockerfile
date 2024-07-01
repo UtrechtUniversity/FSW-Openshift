@@ -6,7 +6,7 @@ WORKDIR /var/www
 
 # upgrades!
 RUN apt-get update
-RUN apt-get -qq dist-upgrade -y
+RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y zip
 
 RUN apt-get -qq install -y sudo nano

@@ -47,6 +47,7 @@ COPY .. /var/www
 # install & run composer
     #COPY ./docker/auth.json /root/.composer/auth.json
 RUN echo "COMPOSER_TOKEN"
+RUN echo "COMPOSER_TOKEN"
 RUN echo $(COMPOSER_TOKEN)
 RUN echo "GITHUB_TOKEN"
 RUN echo $(GITHUB_TOKEN)

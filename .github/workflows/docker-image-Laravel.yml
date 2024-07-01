@@ -33,9 +33,9 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2
         env:
-          COMPOSER_TOKEN: ${{ ACCESS_TOKEN_GITHUB }}
-          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ACCESS_TOKEN_GITHUB}}"} }' # [tl! **]
-          GITHUB_TOKEN: ${{ ACCESS_TOKEN_GITHUB }}
+          COMPOSER_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN_GITHUB}}"} }' # [tl! **]
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
         with:
           dockerfiles: |
             ./openshift/openshift.dockerfile

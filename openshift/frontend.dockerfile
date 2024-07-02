@@ -1,21 +1,12 @@
 FROM node:20-alpine
 # set workdir
-RUN mkdir -p /var/www/
+RUN mkdir /var/www && chown node:node /var/www
 WORKDIR /var/www
 
 RUN apk add --no-cache git
 
-# copy webapp files
-COPY .. /var/www
+COPY --chown=node:node package.json package-lock.json* ./
+
 RUN npm install
-RUN npm run build
-
-RUN chmod a+rw /var/www/vite.config.js
-RUN chmod -R a+rw /var/www/public/build
-
-# entrypoint
-COPY ./docker/frontend-entrypoint.sh /entrypoint.sh
-RUN chmod ugo+x /entrypoint.sh
-RUN dos2unix /entrypoint.sh
-
-ENTRYPOINT /entrypoint.sh
+EXPOSE 7050
+CMD "npm" "run" "build"

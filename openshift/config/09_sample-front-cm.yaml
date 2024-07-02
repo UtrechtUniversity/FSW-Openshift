@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sample-frontend-config
+data:
+  vite-api-url: app.openshift.fss.uu.nl
+  vite-port: '7050'

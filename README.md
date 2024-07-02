@@ -10,7 +10,9 @@ https://www.redhat.com/sysadmin/codeready-containers
 Soms wil hij niet starten, dan moet je de vm verwijderen en opnieuw starten:
 `crc cleanup`
 
+https://console-openshift-console.apps-crc.testing/
 
+oc login -u developer -p developer https://api.crc.testing:6443
 ### Local development:
 Add the following to your /etc/hosts file:
 

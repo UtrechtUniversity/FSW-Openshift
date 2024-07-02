@@ -5,7 +5,7 @@ WORKDIR /var/www
 
 RUN apk add --no-cache git
 
-COPY --chown=node:node package.json package-lock.json* vite.config.js ./
+COPY --chown=node:node package.json package-lock.json* vite.config.js docker/certificates/ ./
 
 #Naar het voorbeeld van:
 #https://github.com/UtrechtUniversity/containerplatform-docs Apache rootless openshift

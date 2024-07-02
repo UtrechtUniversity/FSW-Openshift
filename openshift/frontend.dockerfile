@@ -10,6 +10,9 @@ COPY .. /var/www
 RUN npm install
 RUN npm run build
 
+RUN chmod -R a+rw vite.conifg.js
+RUN chmod -R a+rw /var/www/public/build
+
 # entrypoint
 COPY ./docker/frontend-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh

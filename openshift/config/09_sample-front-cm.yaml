@@ -8,3 +8,5 @@ data:
   database-host: mariadb-sample
   database-port-number: '3306'
   database-name: sample-database
+  oidc-provider-url: https://login.acc.uu.nl/nidp/oauth/nam
+  oidc-slo-link: https://login.acc.uu.nl/nidp/app/logout

@@ -5,6 +5,7 @@ env:
   IMAGE_REGISTRY: ghcr.io/utrechtuniversity
   IMAGE_REGISTRY_USER: ${{ github.actor }}
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
+  TAG_NAME: ${{ github.repository }}
 on:
   push:
     branches: [ "master", "develop"]

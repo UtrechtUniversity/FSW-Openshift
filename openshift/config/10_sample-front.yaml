@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fsw-sample-app
+  labels:
+    app: fsw-sample-app
+    app.kubernetes.io/part-of: fsw-sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-front
+  template:
+    metadata:
+      labels:
+        app: sample-front
+    spec:
+      containers:
+        - name: sample-app
+          image: ghcr.io/utrechtuniversity/fsw-openshift:develop
+          ports:
+            - containerPort: 7050
+          env:
+            - name: LARAVEL_DATABASE_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-config
+                  key: database-type
+            - name: LARAVEL_DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-config
+                  key: database-host

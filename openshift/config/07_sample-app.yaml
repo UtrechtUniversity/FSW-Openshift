@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: sample-app
-          image: ghcr.io/utrechtuniversity/fsw-openshift:master
+          image: ghcr.io/utrechtuniversity/fsw-openshift-backend:master
           ports:
             - containerPort: 9000
           env:

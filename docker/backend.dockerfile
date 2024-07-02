@@ -5,7 +5,7 @@ COPY composer.lock composer.json /var/www/
 WORKDIR /var/www
 
 # upgrades!
-RUN apt-get update -y
+RUN apt-get update
 RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y zip
 
@@ -13,7 +13,7 @@ RUN apt-get -qq install -y sudo nano
 RUN apt-get -qq install -y mariadb-client
 
 RUN apt-get -qq install -y libonig-dev
-RUN apt-get -qq install -y ca-certificates curl gnupg
+RUN apt-get -qq install -y ca-certificates curl gnupg git
 
 # required for sending mail.
 RUN apt-get -qq install -y sendmail
@@ -45,18 +45,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY .. /var/www
 
 # install & run composer
-    #COPY ./docker/auth.json /root/.composer/auth.json
-RUN echo "COMPOSER_TOKEN"
-RUN echo "COMPOSER_TOKEN"
-RUN echo $(COMPOSER_TOKEN)
-RUN echo "GITHUB_TOKEN"
-RUN echo $(GITHUB_TOKEN)
-RUN echo "COMPOSER_AUTH"
-RUN echo $(COMPOSER_AUTH) > /root/.composer/auth.json
-
+COPY ./docker/auth.json /root/.composer/auth.json
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
-# run composer
 
+# run composer
 RUN composer install
 
 # install self signed certifcates to thrust other local dev environments

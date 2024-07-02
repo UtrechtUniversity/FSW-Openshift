@@ -7,22 +7,23 @@ WORKDIR /var/www
 # upgrades!
 RUN apt-get update
 RUN apt-get -y dist-upgrade
-RUN apt-get install -y zip
+RUN apt-get -qq install -y zip
 
-RUN apt-get install -y sudo nano
-RUN apt-get install -y mariadb-client
+RUN apt-get -qq install -y sudo nano
+RUN apt-get -qq install -y mariadb-client
+
+RUN apt-get -qq install -y libonig-dev
+RUN apt-get -qq install -y curl gnupg git
 
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli
 
 # install additional PHP extensions
-RUN  apt-get install -y libmcrypt-dev \
+RUN  apt-get -qq install -y libmcrypt-dev \
         libmagickwand-dev --no-install-recommends \
         && pecl install mcrypt-1.0.7 \
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-enable mcrypt
-
-RUN apt-get install -y git
 
 RUN apt-get clean -y
 
@@ -32,12 +33,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # copy webapp files
 COPY .. /var/www
-
-# install composer
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
-# run composer
-
-RUN composer install
 
 COPY ./openshift/openshift.env /var/www/.env
 
@@ -50,9 +45,6 @@ COPY ./openshift/openshift-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh
 
 RUN php artisan optimize
-
-# Expose port 8443 and start php-fpm server
-EXPOSE 8080
 
 ENTRYPOINT /entrypoint.sh
 

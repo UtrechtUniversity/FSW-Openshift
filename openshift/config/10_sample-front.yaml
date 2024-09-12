@@ -17,10 +17,15 @@ spec:
     spec:
       containers:
         - name: sample-front
-          image: ghcr.io/utrechtuniversity/fsw-openshift-frontend:master
+          image: ghcr.io/utrechtuniversity/fsw-openshift-front:master
           ports:
             - containerPort: 7050
           env:
+            - name: APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-frontend-config
+                  key: vite-api-url
             - name: VITE_API_URL
               valueFrom:
                 configMapKeyRef:

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: sample-front
-          image: ghcr.io/utrechtuniversity/fsw-openshift-front:master
+          image: ghcr.io/utrechtuniversity/fsw-openshift-frontend:master
           ports:
             - containerPort: 7050
           env:

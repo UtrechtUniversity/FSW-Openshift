@@ -1,11 +1,12 @@
 FROM php:8.2-fpm
 
+RUN apt-get update && apt-get install -y nodejs npm
+
 COPY composer.lock composer.json /var/www/
 # set workdir
 WORKDIR /var/www
 
 # upgrades!
-RUN apt-get update
 RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y zip
 
@@ -48,5 +49,12 @@ RUN php artisan optimize
 
 ENTRYPOINT /entrypoint.sh
 
+#Naar het voorbeeld van:
+#https://github.com/UtrechtUniversity/containerplatform-docs Apache rootless openshift
+RUN chgrp -R 0 /var/www && \
+    chmod -R g=u /var/www
+
+RUN npm install
+EXPOSE 7050
 CMD ["php-fpm"]
 

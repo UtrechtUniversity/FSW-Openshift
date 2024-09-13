@@ -10,3 +10,5 @@ data:
   database-name: sample-database
   oidc-provider-url: https://login.acc.uu.nl/nidp/oauth/nam
   oidc-slo-link: https://login.acc.uu.nl/nidp/app/logout
+  vite-api-url: app.openshift.fss.uu.nl
+  vite-port: '7050'

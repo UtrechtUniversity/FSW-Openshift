@@ -62,7 +62,7 @@
 {{--            Element is nodig om de naam van de applicatie te centreren            --}}
         </div>
     @endif
-    <a class="navbar-brand text-light px-4" href="#">FSW-Dualnets</a>
+    <a class="navbar-brand text-light px-4" href="#">FSW-Openshift</a>
 
     <ul class="nav">
         @if(!Auth::guest())

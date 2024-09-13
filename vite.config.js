@@ -35,6 +35,12 @@ export default defineConfig({
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
         }
     },
+    server: {
+        port: 7050,
+        hmr: {
+            host: 'localhost',
+        },
+    },
     // server: {
     //     https: {
     //         key: fs.readFileSync('docker/certificates/docker.dev.key'),

@@ -71,3 +71,13 @@ spec:
                 secretKeyRef:
                   name: mariadb-secret
                   key: mariadb-password
+            - name: VITE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-frontend-config
+                  key: vite-api-url
+            - name: VITE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-frontend-config
+                  key: vite-port

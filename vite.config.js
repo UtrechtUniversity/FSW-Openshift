@@ -10,6 +10,7 @@ dotenv.config() // load env vars from .env
 
 // const host = `${process.env.VITE_API_URL ?? 'http://localhost:3000'}`;
 // const port = `${process.env.VITE_PORT ?? '3000'}`;
+console.log('Start vite!!!')
 // console.log(`Vite server running on ${host}:${port}`);
 export default defineConfig({
     plugins: [

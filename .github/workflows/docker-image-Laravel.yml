@@ -5,13 +5,9 @@ on:
   pull_request:
     branches: [ "master" ]
 env:
-  # 🖊️ EDIT to change the image registry settings.
-  # Registries such as GHCR, Quay.io, and Docker Hub are supported.
-  IMAGE_REGISTRY: ghcr.io/utrechtuniversity
-  IMAGE_REGISTRY_USER: ${{ github.actor }}
-  IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}-backend
   TAG_NAME: ${{ github.repository }}
-  IMAGE_NAME: ${{ github.repository }}
 jobs:
   build:
     runs-on: ubuntu-latest

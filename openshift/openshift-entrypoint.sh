@@ -5,7 +5,6 @@ php artisan config:clear
 
 # run artisan migrate & seed
 echo "⭐️ Run artisan migrate";
-
 php artisan db:show
 php artisan migrate
 

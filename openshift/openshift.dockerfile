@@ -49,5 +49,12 @@ RUN php artisan optimize
 
 ENTRYPOINT /entrypoint.sh
 
+#Naar het voorbeeld van:
+#https://github.com/UtrechtUniversity/containerplatform-docs Apache rootless openshift
+RUN chgrp -R 0 /var/www && \
+    chmod -R g=u /var/www
+
+RUN npm install
+EXPOSE 7050
 CMD ["php-fpm"]
 

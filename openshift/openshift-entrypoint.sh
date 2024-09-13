@@ -5,6 +5,8 @@ php artisan config:clear
 
 # run artisan migrate & seed
 echo "⭐️ Run artisan migrate";
+
+php artisan db:show
 php artisan migrate --seed
 ##composer install --no-dev --no-scripts
 npm run build

@@ -3,6 +3,7 @@ echo "  ⭐️️️️️⭐️️️️️⭐️️️️️⭐️ VERSIE: 1 "
 
 php artisan config:clear
 
+echo "⭐️ develop branch????";
 # run artisan migrate & seed
 echo "⭐️ Run artisan migrate";
 php artisan migrate --seed

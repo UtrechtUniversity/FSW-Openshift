@@ -1,11 +1,12 @@
-FROM php:8.2-fpm-alpine3.17
+FROM php:8.2-fpm
+
+RUN apt-get update && apt-get install -y nodejs npm
 
 COPY composer.lock composer.json /var/www/
 # set workdir
 WORKDIR /var/www
 
 # upgrades!
-RUN apt-get update
 RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y zip
 

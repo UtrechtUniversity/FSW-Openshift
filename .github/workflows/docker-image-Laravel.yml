@@ -22,7 +22,12 @@ jobs:
       attestations: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
       - name: Build the Docker image
         id: build-image
         uses: redhat-actions/buildah-build@v2
@@ -56,3 +61,4 @@ jobs:
           registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ env.IMAGE_REGISTRY_USER }}
           password: ${{ env.IMAGE_REGISTRY_PASSWORD }}
+    uses:

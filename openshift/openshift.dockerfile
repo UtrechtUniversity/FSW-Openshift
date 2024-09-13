@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2-fpm-alpine3.17
 
 COPY composer.lock composer.json /var/www/
 # set workdir

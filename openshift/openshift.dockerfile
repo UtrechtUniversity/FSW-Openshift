@@ -56,5 +56,7 @@ RUN chgrp -R 0 /var/www && \
 
 RUN npm install
 EXPOSE 7050
+EXPOSE 5173
+
 CMD ["php-fpm"]
 

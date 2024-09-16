@@ -18,6 +18,7 @@ spec:
       containers:
         - name: sample-app
           image: ghcr.io/utrechtuniversity/fsw-openshift:develop
+          imagePullPolicy: Always
           ports:
             - containerPort: 9000
           env:

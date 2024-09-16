@@ -9,9 +9,5 @@ spec:
   ports:
     - port: 9000
       targetPort: 9000
-    - port: 7050
-      targetPort: 7050
-    - port: 5173
-      targetPort: 5173
   selector:
     app: sample-app

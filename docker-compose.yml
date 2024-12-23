@@ -12,6 +12,14 @@ services:
       - hts-appteam-local-dev
     ports:
       - "9000:9000"
+    env_file:
+      - docker/keys.env
+    environment:
+      VIRTUAL_HOST: openshift.docker.dev
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 443
+      DUSK_DRIVER_URL: http://seleniarm.docker.dev:4444/wd/hub
+      DUSK_START_MAXIMIZED: true
   frontend:
     container_name: openshift_frontend
     build:

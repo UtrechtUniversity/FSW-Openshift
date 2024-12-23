@@ -35,22 +35,22 @@ export default defineConfig({
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
         }
     },
-    server: {
-        port: 8080,
-        hmr: {
-            host: 'localhost',
-        },
-    },
     // server: {
-    //     https: {
-    //         key: fs.readFileSync('docker/certificates/docker.dev.key'),
-    //         cert: fs.readFileSync('docker/certificates/docker.dev.crt'),
-    //     },
-    //     host: true,
-    //     port: `${port}`,
+    //     port: 8080,
     //     hmr: {
-    //         host: `${host}`,
-    //         protocol: 'wss'
+    //         host: 'localhost',
     //     },
     // },
+    server: {
+        https: {
+            key: fs.readFileSync('docker/certificates/docker.dev.key'),
+            cert: fs.readFileSync('docker/certificates/docker.dev.crt'),
+        },
+        host: true,
+        port: 7050,
+        hmr: {
+            host: 'openshift.docker.dev',
+            protocol: 'wss'
+        },
+    },
 });

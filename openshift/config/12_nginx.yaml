@@ -18,5 +18,6 @@ spec:
       containers:
         - name: nginx
           image: ghcr.io/utrechtuniversity/nginx:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080

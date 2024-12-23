@@ -55,6 +55,8 @@ RUN chgrp -R 0 /var/www && \
     chmod -R g=u /var/www
 
 RUN npm install
+EXPOSE 8080
+EXPOSE 9000
 EXPOSE 7050
 EXPOSE 5173
 

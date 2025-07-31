@@ -1,13 +1,12 @@
 name: Create and publish Backend Docker image
 on:
   push:
-    branches: [ "master", "develop"]
+    branches: [ "master", "develop", "feature/*"]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master"]
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  TAG_NAME: ${{ github.repository }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,7 +39,8 @@ jobs:
       - name: Install dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
-        run: composer install --prefer-dist --no-suggest --no-progress
+        run: composer install --prefer-dist --no-suggest --no-progress 
+          && npm install && npm run build && npm prune --production
         #          env:
         #            COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
 #        run: npm install && npm run build && npm prune --production

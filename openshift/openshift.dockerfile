@@ -49,7 +49,7 @@ RUN chmod ugo+x /entrypoint.sh
 
 RUN php artisan optimize
 
-ENTRYPOINT entrypoint.sh
+ENTRYPOINT /entrypoint.sh
 
 RUN npm install
 

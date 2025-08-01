@@ -54,7 +54,7 @@ RUN npm install
 # Switch to non-root user
 USER www-data
 
-
+EXPOSE 80
 EXPOSE 8080
 EXPOSE 9000
 ENTRYPOINT exec /entrypoint.sh

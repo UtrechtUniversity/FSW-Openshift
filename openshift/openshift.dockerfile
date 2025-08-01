@@ -57,17 +57,14 @@ RUN chgrp -R 0 /var/www && \
 
 RUN npm install
 
-# Copy config that does NOT rely on changing user
-COPY ./openshift/www.conf /usr/local/etc/php-fpm.d/www.conf
+# Switch to non-root user
+USER www-data
 
 EXPOSE 80
 EXPOSE 8080
 EXPOSE 9000
 EXPOSE 7050
 EXPOSE 5173
-
-# Switch to non-root user
-USER www-data
 
 CMD ["php-fpm"]
 

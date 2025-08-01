@@ -17,7 +17,7 @@ RUN apt-get -qq install -y libonig-dev
 RUN apt-get -qq install -y curl gnupg git
 
 # testing fpm:
-RUN apt-get -qq install -y libfcgi0ldbl ps
+RUN apt-get -qq install -y libfcgi0ldbl procps
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli
 

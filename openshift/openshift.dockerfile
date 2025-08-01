@@ -53,8 +53,8 @@ RUN npm install
 # Copy config that does NOT rely on changing user
 COPY ./openshift/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-# Switch to non-root user
-USER www-data
+## Switch to non-root user
+#USER www-data
 
 EXPOSE 80
 EXPOSE 8080

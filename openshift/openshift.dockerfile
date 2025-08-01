@@ -49,15 +49,15 @@ RUN chmod ugo+x /entrypoint.sh
 
 RUN php artisan optimize
 
-ENTRYPOINT /entrypoint.sh
-
 RUN npm install
 
 # Switch to non-root user
 USER www-data
 
+
 EXPOSE 8080
 EXPOSE 9000
+ENTRYPOINT exec /entrypoint.sh
 
 CMD ["php-fpm"]
 

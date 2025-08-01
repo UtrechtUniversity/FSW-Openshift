@@ -17,7 +17,7 @@ RUN apt-get -qq install -y libonig-dev
 RUN apt-get -qq install -y curl gnupg git
 
 # testing fpm:
-RUN apt-get -qq install -y libfcgi0ldbl procps
+RUN apt-get -qq install -y libfcgi0ldbl ps
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli
 
@@ -49,17 +49,12 @@ RUN chmod ugo+x /entrypoint.sh
 
 RUN php artisan optimize
 
+ENTRYPOINT entrypoint.sh
+
 RUN npm install
-# Copy config that does NOT rely on changing user
-COPY ./openshift/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-## Switch to non-root user
-#USER www-data
-
-EXPOSE 80
 EXPOSE 8080
 EXPOSE 9000
-ENTRYPOINT exec /entrypoint.sh
 
 CMD ["php-fpm"]
 

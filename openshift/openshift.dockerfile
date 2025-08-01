@@ -51,7 +51,7 @@ RUN php artisan optimize
 
 RUN npm install
 # Copy config that does NOT rely on changing user
-COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./opensift/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Switch to non-root user
 USER www-data

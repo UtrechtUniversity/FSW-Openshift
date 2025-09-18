@@ -11,7 +11,7 @@ echo "⭐️ Run artisan migrate";
 php artisan migrate
 
 ##composer install --no-dev --no-scripts
-npm run build
+#npm run build
 
 php-fpm
 

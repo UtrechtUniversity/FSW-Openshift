@@ -58,7 +58,7 @@ ENTRYPOINT /entrypoint.sh
 
 RUN npm install
 
-COPY ./openshift/www.conf /usr/local/etc/php-fpm.d/www.conf
+#COPY ./openshift/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 EXPOSE 8080
 EXPOSE 9000

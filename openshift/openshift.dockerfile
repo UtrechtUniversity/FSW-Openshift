@@ -28,8 +28,6 @@ RUN  apt-get -qq install -y libmcrypt-dev \
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-enable mcrypt
 
-RUN sudo a2enmod proxy_fcgi setenvif
-
 RUN apt-get clean -y
 
 # set corrent TimeZone

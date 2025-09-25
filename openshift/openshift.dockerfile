@@ -21,8 +21,6 @@ RUN apt-get -qq install -y libfcgi0ldbl procps
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli
 
-RUN sudo  apt install php8.3-fpm \
-
 # install additional PHP extensions
 RUN  apt-get -qq install -y libmcrypt-dev \
         libmagickwand-dev --no-install-recommends \
@@ -31,7 +29,6 @@ RUN  apt-get -qq install -y libmcrypt-dev \
         && docker-php-ext-enable mcrypt
 
 RUN sudo a2enmod proxy_fcgi setenvif
-RUN sudo a2enconf php8.2-fpm
 
 RUN apt-get clean -y
 

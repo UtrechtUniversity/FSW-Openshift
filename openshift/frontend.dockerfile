@@ -4,7 +4,7 @@ WORKDIR /var/www
 
 COPY ../public /var/www/html
 
-RUN apt-get git
+RUN apt-get -qq install -y git
 
 #Naar het voorbeeld van:
 #https://github.com/UtrechtUniversity/containerplatform-docs Apache rootless openshift

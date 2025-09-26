@@ -1,5 +1,5 @@
-FROM php:8.2-fpm
 FROM php:8.2-apache
+FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y nodejs npm
 

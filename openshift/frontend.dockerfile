@@ -1,9 +1,10 @@
-FROM node:20-alpine
+FROM php:8.2-apache
 # set workdir
-RUN mkdir /var/www && chown node:node /var/www
 WORKDIR /var/www
 
-RUN apk add --no-cache git
+COPY ../public /var/www/html
+
+RUN apt-get git
 
 #Naar het voorbeeld van:
 #https://github.com/UtrechtUniversity/containerplatform-docs Apache rootless openshift

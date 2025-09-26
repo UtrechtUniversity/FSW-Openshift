@@ -11,7 +11,7 @@ EXPOSE 9001
 EXPOSE 7050
 EXPOSE 5173
 
-MKDIR -p /var/www
+#RUN MKDIR -p /var/www
 # copy webapp files
 COPY ../public /var/www/html
 

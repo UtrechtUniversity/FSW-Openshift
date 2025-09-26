@@ -1,4 +1,16 @@
-FROM php:8.2-apache
+FROM docker.io/httpd:2.4.59
+
+RUN sed -i 's/^Listen 80/Listen 9000/' /usr/local/apache2/conf/httpd.conf
+
+EXPOSE 8080
+EXPOSE 9000
+
+RUN chgrp -R 0 /usr/local/apache2 && \
+    chmod -R g=u /usr/local/apache2 \
+
+COPY /var/www/public/ /usr/local/apache2/htdocs/
+
+
 FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y nodejs npm

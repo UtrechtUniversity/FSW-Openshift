@@ -19,9 +19,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          - image: utrechtuniversity/fsw-openshift
             dockerfile: openshift/openshift.dockerfile
-          - image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend
+          - image: utrechtuniversity/fsw-openshift-frontend
             dockerfile: openshift/frontend.dockerfile
     steps:
       - name: Checkout repository

@@ -4,6 +4,9 @@ WORKDIR /var/www
 
 COPY ../public /var/www/html
 
+# upgrades!
+RUN apt-get update
+RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y git
 
 #Naar het voorbeeld van:

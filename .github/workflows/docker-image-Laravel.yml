@@ -21,7 +21,7 @@ jobs:
         include:
           - image: utrechtuniversity/fsw-openshift
             dockerfile: openshift/openshift.dockerfile
-          - image: fsw-openshift-frontend
+          - image: ghcr.io/utrechtuniversity/fsw-openshift-frontend
             dockerfile: openshift/frontend.dockerfile
     steps:
       - name: Checkout repository

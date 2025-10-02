@@ -19,9 +19,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - image: ghcr.io/utrechtuniversity/fsw-openshift
+          - image: utrechtuniversity/fsw-openshift
             dockerfile: openshift/openshift.dockerfile
-          - image: ghcr.io/utrechtuniversity/fsw-openshift-frontend
+          - image: fsw-openshift-frontend
             dockerfile: openshift/frontend.dockerfile
     steps:
       - name: Checkout repository

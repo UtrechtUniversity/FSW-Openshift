@@ -1,4 +1,4 @@
-name: Create and publish Backend Docker image
+name: Create and publish Backend & Frontend Docker image
 on:
   push:
     branches: [ "master", "develop", "feature/*"]
@@ -19,10 +19,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - image: utrechtuniversity/fsw-openshift
+          - image: ghcr.io/utrechtuniversity/fsw-openshift
             dockerfile: openshift/openshift.dockerfile
           - image: ghcr.io/utrechtuniversity/fsw-openshift-frontend
             dockerfile: openshift/frontend.dockerfile
+          - image: Nginx
+            tags: latest
+            dockerfiles: openshift/nginx.dockerfile
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -63,11 +66,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Build the Docker image
-        id: build-image
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: Nginx
-          tags: latest
-          dockerfiles: |
-            ./openshift/nginx.dockerfile

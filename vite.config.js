@@ -40,10 +40,8 @@ export default defineConfig({
         //     key: fs.readFileSync('docker/certificates/docker.dev.key'),
         //     cert: fs.readFileSync('docker/certificates/docker.dev.crt'),
         // },
-        https: false,
         host: host,
         hmr: {
-            https: false,
             host: host,
             clientPort: port,
             port: port,

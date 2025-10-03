@@ -2,7 +2,7 @@ FROM docker.io/httpd:2.4.59
 # set workdir
 #WORKDIR /var/www
 
-RUN sed -i 's/^Listen 80/Listen 7050/' /usr/local/apache2/conf/httpd.conf
+RUN sed -i 's/^Listen 80/Listen 8080/' /usr/local/apache2/conf/httpd.conf
 COPY ../public /var/www/html
 
 # upgrades!
@@ -20,4 +20,4 @@ RUN chgrp -R 0 /usr/local/apache2 && \
 
 COPY ../public /usr/local/apache2/htdocs/
 
-EXPOSE 7050
+EXPOSE 8080

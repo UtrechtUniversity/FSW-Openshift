@@ -1,7 +1,7 @@
 <div class="container mb-2 mt-0">
     <nav class="nav flex-xl-row">
         <div class="flex-lg-fill">
-            <a href="/"><img class="logo" src="/images/hts-appteam-base/uu-logo-{{App::getLocale()}}.svg" alt="University Logo"></a>
+            <a href="/"><img class="logo" src="/build/hts-appteam-base/images/uu-logo-{{App::getLocale()}}.svg" alt="University Logo"></a>
         </div>
         <div class="text-end">
             @if(!Auth::guest())

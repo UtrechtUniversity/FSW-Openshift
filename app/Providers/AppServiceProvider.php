@@ -20,8 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(config('hts-appteam.force_https')) {
-            URL::forceScheme('https');
-        }
+//        if(config('hts-appteam.force_https')) {
+//            URL::forceScheme('https');
+//        }
     }
 }

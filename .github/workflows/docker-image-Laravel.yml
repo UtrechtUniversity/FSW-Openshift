@@ -19,8 +19,10 @@ jobs:
       matrix:
         include:
           - image: ghcr.io/utrechtuniversity/fsw-openshift
+            name: fsw-openshift
             dockerfile: openshift/openshift.dockerfile
           - image: ghcr.io/utrechtuniversity/fsw-openshift-frontend
+            name: fsw-openshift-frontend
             dockerfile: openshift/frontend.dockerfile
     steps:
       - name: Checkout repository
@@ -65,5 +67,5 @@ jobs:
         uses: actions/delete-package-versions@v5
         with:
           delete-only-untagged-versions: true
-          package-name: ${{ matrix.image }}
+          package-name: ${{ matrix.name }}
           package-type: 'container'

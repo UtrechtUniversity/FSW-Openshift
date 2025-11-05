@@ -3,6 +3,7 @@ on:
   push:
     branches: [ "master", "develop", "feature/*", "bugfix/*", "hotfix/*"]
   release:
+    types: [ published ]
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}

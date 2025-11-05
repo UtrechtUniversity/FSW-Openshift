@@ -66,4 +66,4 @@ jobs:
         with:
           delete-only-untagged-versions: true
           package-name: ${{ matrix.image }}
-          package-type: 'image'
+          package-type: 'container'

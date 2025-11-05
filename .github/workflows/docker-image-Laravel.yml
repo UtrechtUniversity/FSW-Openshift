@@ -59,3 +59,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      # When the delevelop branch is updated the develop tag is assigned to a new hash/commit. The hash/commit which
+      # previously had the develop tags is now untagged. This gives a lot of clutter in the version overview. Therefor untagged version are deleted.
+      - name: delete untagged versions.
+        uses: actions/delete-package-versions@v5
+        with:
+          delete-only-untagged-versions: true
+          package-name: ${{ matrix.image }}
+          package-type: 'image'

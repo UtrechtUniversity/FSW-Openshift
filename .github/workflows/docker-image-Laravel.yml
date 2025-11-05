@@ -1,9 +1,8 @@
 name: Create and publish Backend & Frontend Docker image
 on:
   push:
-    branches: [ "master", "develop", "feature/*", "bugfix/*", "hotfix/*"]
-  release:
-    types: [ published ]
+    branches: [ "develop", "feature/*", "bugfix/*", "hotfix/*"]
+    tags: [ 'v*.*.*' ]
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}

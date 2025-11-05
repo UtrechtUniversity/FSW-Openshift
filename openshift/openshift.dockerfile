@@ -16,6 +16,8 @@ RUN apt-get -qq install -y mariadb-client
 RUN apt-get -qq install -y libonig-dev
 RUN apt-get -qq install -y curl gnupg git
 
+# testing fpm:
+RUN apt-get -qq install -y libfcgi0ldbl procps
 # install mysql
 RUN docker-php-ext-install pdo_mysql mysqli
 
@@ -49,12 +51,12 @@ RUN php artisan optimize
 
 ENTRYPOINT /entrypoint.sh
 
-#Naar het voorbeeld van:
-#https://github.com/UtrechtUniversity/containerplatform-docs Apache rootless openshift
-RUN chgrp -R 0 /var/www && \
-    chmod -R g=u /var/www
-
 RUN npm install
-EXPOSE 7050
+
+#COPY ./openshift/www.conf /usr/local/etc/php-fpm.d/www.conf
+
+EXPOSE 8080
+EXPOSE 9000
+
 CMD ["php-fpm"]
 

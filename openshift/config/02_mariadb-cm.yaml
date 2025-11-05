@@ -1,8 +1,0 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mariadb-config
-data:
-  mariadb-database: sample-database
-  mariadb-user: sample-database-user

@@ -13,9 +13,11 @@ return [
         'oidc'
     ],
 
-    /*
-     * The field used in the database to identify a user
-     */
+    'force_https' => env('FORCE_HTTPS',true),
+
+     /*
+      * The field used in the database to identify a user
+      */
     'user_identifier_key' => env('AUTH_USER_IDENTIFIER_KEY', 'solis_id'),
 
     /**

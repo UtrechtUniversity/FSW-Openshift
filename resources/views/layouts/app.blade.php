@@ -17,13 +17,7 @@
     <style>
         [x-cloak] { display: none !important; }
     </style>
-    <!-- Layout JS -->
-    <script type="application/javascript" src="{{ asset('js/hts-appteam-base/auth.js') }}"></script>
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="{{ asset('/css/hts-appteam-base/auth.css') }}">
     {{--    <meta name="theme-color" content="#7952b3">--}}
-
     <!-- Include Plausible.IO script for privacy friendly stats -->
     <script defer data-domain="<?= parse_url(env('APP_URL'), PHP_URL_HOST) ?>" src="https://plausible.io/js/plausible.js"></script>
 

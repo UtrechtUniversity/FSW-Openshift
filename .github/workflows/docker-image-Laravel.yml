@@ -19,8 +19,10 @@ jobs:
       matrix:
         include:
           - image: ghcr.io/utrechtuniversity/fsw-openshift
+            name: fsw-openshift
             dockerfile: openshift/openshift.dockerfile
           - image: ghcr.io/utrechtuniversity/fsw-openshift-frontend
+            name: fsw-openshift-frontend
             dockerfile: openshift/frontend.dockerfile
     steps:
       - name: Checkout repository
@@ -59,3 +61,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      # When the delevelop branch is updated the develop tag is assigned to a new hash/commit. The hash/commit which
+      # previously had the develop tags is now untagged. This gives a lot of clutter in the version overview. Therefor untagged version are deleted.
+      - name: delete untagged versions.
+        uses: actions/delete-package-versions@v5
+        with:
+          delete-only-untagged-versions: true
+          package-name: ${{ matrix.name }}
+          package-type: 'container'

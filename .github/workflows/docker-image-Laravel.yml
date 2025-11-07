@@ -124,7 +124,7 @@ jobs:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
         run: composer install -n --prefer-dist
       - name: Run Static Analysis
-        run: ./vendor/bin/phpstan --error-format=github
+        run: ./vendor/bin/phpstan analyse --error-format=github
   build:
     needs: [ laravel-tests, phpcsmd, phpstan ]
     ## if one of the above jobs does not run, this job should start.

@@ -76,7 +76,7 @@ jobs:
       - name: Get changed files
         id: changes
         # Set outputs using the command.
-        run: echo "ts=$(git diff --name-only origin/develop..${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+        run: echo "ts=$(git diff --diff-filter=d --name-only origin/develop..${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
 
   phpcsmd:
     runs-on: ubuntu-latest
@@ -104,7 +104,6 @@ jobs:
       - name: Check PHP code style
         # run PHP Code Sniffer
         run: vendor/bin/phpcs --report-full
-
       - name: Run PHP Mess Detector
         # run PHP Mess Detector
         run: FILES="${{needs.changedfiles.outputs.ts}}" && vendor/bin/phpmd ${FILES// /,} text phpmd.xml --exclude vendor/,tests/

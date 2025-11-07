@@ -7,7 +7,141 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+      - uses: actions/checkout@main
+      - name: Copy config
+        env:
+          COMPOSER_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+        run: |
+          php -r "copy('.env.testing', '.env');"
+          sed -i 's/testdb.docker.dev/127.0.0.1/' .env.testing
+          echo '{ "github-oauth": {  "github.com": "'$GITHUB_ACCESS_TOKEN'"} }' > /home/$(whoami)/.composer/auth.json
+      - name: Start MariaDB
+        uses: getong/mariadb-action@v1.1
+        with:
+          # MYSQL_DATABASE - name for the default database that is created
+          mysql database: testing
+          # MYSQL_USER - create the specified user with superuser power for created database
+          mysql user: testing
+          # MYSQL_PASSWORD - specified superuser password which user is power for created database
+          mysql password: secret
+
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Setup npm
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18
+      - name: Install NPM dependencies
+        run: npm install
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+      - name: Compile assets
+        run: npm run production
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+      - name: Generate key
+        run: php artisan key:generate
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+      - name: Migrate
+        run: |
+          php artisan config:clear
+          php artisan migrate --env=testing
+      - name: Execute tests defined in CI (Unit and Feature tests) via Pest tests
+        run: |
+          pwd
+          ls -la
+          vendor/bin/pest --no-coverage
+      - name: Archive Test Results
+        uses: actions/upload-artifact@v5
+        if: ${{ always() }}
+        with:
+          name: test-results
+          path: |
+            tests/_output/debug/
+            storage/logs/
+  changedfiles:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      ts: ${{ steps.changes.outputs.ts }}
+    steps:
+      # Make sure we have some code to diff.
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changes
+        # Set outputs using the command.
+        run: echo "ts=$(git diff --name-only origin/develop..${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+
+  phpcsmd:
+    runs-on: ubuntu-latest
+    # require the first job to have run
+    needs: changedfiles
+    # only run there are changed files
+    if: ${{needs.changedfiles.outputs.ts}}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Show changed files
+        run: echo ${{needs.changedfiles.outputs.ts}}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: ssh2
+          coverage: none
+          tools: composer, cs2pr, phpcs
+
+      - name: Install dependencies
+        env:
+          COMPOSER_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN_GITHUB }}
+        # install composer packages
+        run: |
+          echo '{"github-oauth": {  "github.com": "'$GITHUB_ACCESS_TOKEN'"}}' > /home/$(whoami)/.composer/auth.json
+          composer install --prefer-dist --no-progress
+
+      - name: Check PHP code style
+        # run PHP Code Sniffer
+        run: vendor/bin/phpcs ${{needs.changedfiles.outputs.ts}} --report-full
+
+      - name: Run PHP Mess Detector
+        # run PHP Mess Detector
+        run: FILES="${{needs.changedfiles.outputs.ts}}" && vendor/bin/phpmd ${FILES// /,} text phpmd.xml --exclude vendor/,tests/
+  phpstan:
+    name: phpstan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Install composer dependencies
+        run: composer install -n --prefer-dist
+
+      - name: Run Static Analysis
+        run: ./vendor/bin/phpstan --error-format=github
   build:
+    needs: [ laravel-tests, phpcsmd, phpstan ]
+    ## if one of the above jobs does not run, this job should start.
+    ## This job runs when upstream jobs are either successful or skipped, but not if any have failed.
+    if: ${{ always() && !contains(needs.*.result, 'failure') }}
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:

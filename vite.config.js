@@ -36,16 +36,28 @@ export default defineConfig({
         }
     },
     server: {
+        https: {
+            key: fs.readFileSync('docker/certificates/docker.dev.key'),
+            cert: fs.readFileSync('docker/certificates/docker.dev.crt'),
+        },
+        host: true,
+        port: port,
+        cors: true,
+        hmr: {
+            host: host,
+            protocol: 'wss'
+        },
+
         // https: {
         //     key: fs.readFileSync('docker/certificates/docker.dev.key'),
         //     cert: fs.readFileSync('docker/certificates/docker.dev.crt'),
         // },
-        host: host,
-        hmr: {
-            host: host,
-            clientPort: port,
-            port: port,
-            protocol: 'wss'
-        },
+        // host: host,
+        // hmr: {
+        //     host: host,
+        //     clientPort: port,
+        //     port: port,
+        //     protocol: 'wss'
+        // },
     },
 });

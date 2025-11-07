@@ -14,18 +14,19 @@
         "php": "^8.1",
         "doctrine/dbal": "^3.8",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.10",
-        "laravel/sanctum": "^3.3",
+        "laravel/framework": "^11.0",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
         "utrecht_university/hts_appteam_laravelbase": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
+        "larastan/larastan": "^3.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.1",
+        "nunomaduro/collision": "^8.0",
+        "pestphp/pest": "^4.1",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -49,7 +50,9 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan vendor:publish --provider='UU\\HTSAppTeam\\LaravelBase\\Providers\\AppTeamServiceProvider'",
+            "@php artisan vendor:publish --tag=\"public\" --force --provider='UU\\HTSAppTeam\\LaravelBase\\Providers\\AppTeamServiceProvider'"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

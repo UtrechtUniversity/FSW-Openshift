@@ -7,7 +7,128 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 jobs:
+  changedfiles:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      ts: ${{ steps.changes.outputs.ts }}
+    steps:
+      # Make sure we have some code to diff.
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changes
+        # Set outputs using the command.
+        run: echo "ts=$(git diff --diff-filter=d --name-only origin/develop..${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+
+  phpcsmd:
+    runs-on: ubuntu-latest
+    # require the first job to have run
+    needs: changedfiles
+    # only run there are changed files
+    if: ${{needs.changedfiles.outputs.ts}}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Show changed files
+        run: echo ${{needs.changedfiles.outputs.ts}}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: ssh2
+          coverage: none
+          tools: composer, cs2pr, phpcs
+      - name: Install composer dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
+        run: composer install -n --prefer-dist
+      - name: Check PHP code style
+        # run PHP Code Sniffer
+        run: vendor/bin/phpcs --report-full
+      - name: Run PHP Mess Detector
+        # run PHP Mess Detector
+        run: FILES="${{needs.changedfiles.outputs.ts}}" && vendor/bin/phpmd ${FILES// /,} text phpmd.xml --exclude vendor/,tests/
+  phpstan:
+    name: phpstan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Install composer dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
+        run: composer install -n --prefer-dist
+      - name: Run Static Analysis
+        run: ./vendor/bin/phpstan analyse --error-format=github
+  laravel-tests:
+    needs: [ phpcsmd, phpstan ]
+    ## if one of the above jobs does not run, this job should start.
+    ## This job runs when upstream jobs are either successful or skipped, but not if any have failed.
+    if: ${{ always() && !contains(needs.*.result, 'failure') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+      - uses: actions/checkout@main
+      - name: Copy config
+        run: |
+          php -r "copy('.env.testing', '.env');"
+          sed -i 's/testdb.docker.dev/127.0.0.1/' .env.testing
+      - name: Start MariaDB
+        uses: getong/mariadb-action@v1.1
+        with:
+          # MYSQL_DATABASE - name for the default database that is created
+          mysql database: testing
+          # MYSQL_USER - create the specified user with superuser power for created database
+          mysql user: testing
+          # MYSQL_PASSWORD - specified superuser password which user is power for created database
+          mysql password: secret
+
+      - name: Install Dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: NPM install & build
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+      - run: npm install
+      - run: npm run build
+      - run: npm prune --production
+      - run: rm -Rf node_modules
+      - name: Generate key
+        run: php artisan key:generate
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+      - name: Migrate
+        run: |
+          php artisan config:clear
+          php artisan migrate --env=testing
+      - name: Execute tests defined in CI (Unit and Feature tests) via Pest tests
+        run: |
+          pwd
+          ls -la
+          vendor/bin/pest --no-coverage
+      - name: Archive Test Results
+        uses: actions/upload-artifact@v5
+        if: ${{ always() }}
+        with:
+          name: test-results
+          path: |
+            tests/_output/debug/
+            storage/logs/
   build:
+    needs: [ laravel-tests ]
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
@@ -30,15 +151,18 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-      # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
+          php-version: 8.3
+      # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password
+      # that will publish the packages. Once published, the packages are scoped to the account defined here.
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags and labels that will be applied to the specified image. The `id` "meta" allows the output of this step to be referenced in a subsequent step. The `images` value provides the base name for the tags and labels.
+      # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags and
+      # labels that will be applied to the specified image. The `id` "meta" allows the output of this step to be
+      # referenced in a subsequent step. The `images` value provides the base name for the tags and labels.
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -49,8 +173,11 @@ jobs:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]
         run: composer install --prefer-dist --no-suggest --no-progress 
           && npm install && npm run build && npm prune --production
-      # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
-      # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the `docker/build-push-action` repository.
+      # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`.
+      # If the build succeeds, it pushes the image to GitHub Packages.
+      # It uses the `context` parameter to define the build's context as the set of files located in the specified path.
+      # For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the
+      # `docker/build-push-action` repository.
       # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
       - name: Build and push Docker backend image
         id: push
@@ -61,8 +188,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      # When the delevelop branch is updated the develop tag is assigned to a new hash/commit. The hash/commit which
-      # previously had the develop tags is now untagged. This gives a lot of clutter in the version overview. Therefor untagged version are deleted.
+      # When the develop branch is updated the develop tag is assigned to a new hash/commit. The hash/commit which
+      # previously had the develop tags is now untagged. This gives a lot of clutter in the version overview.
+      # Therefor untagged version are deleted.
       - name: delete untagged versions.
         uses: actions/delete-package-versions@v5
         with:

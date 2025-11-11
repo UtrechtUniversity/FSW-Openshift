@@ -4,6 +4,7 @@ if (! function_exists('getCountriesByIso')) {
 
     function getCountriesByIso()
     {
+        $data = [];
         $fileContents = file(storage_path('app/country_list.csv'));
         foreach ($fileContents as $line) {
             $tempLine = str_getcsv($line);
@@ -25,6 +26,7 @@ if (! function_exists('getCountriesByName')) {
     {
         $fileContents = file(storage_path('app/country_list.csv'));
 
+        $data = [];
         foreach ($fileContents as $line) {
             $tempLine = str_getcsv($line);
             $tempLine[0] = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $tempLine[0]);
@@ -48,7 +50,8 @@ if (! function_exists('csvToArray')) {
         }
 
         $data = [];
-        if (($handle = fopen($filename, 'r')) !== false) {
+        $handle = fopen($filename, 'r');
+        if ($handle !== false) {
             $headerSet = false;
             while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
                 if (empty($headers) && ! $headerSet) {
@@ -100,9 +103,6 @@ if (! function_exists('echoArray')) {
     {
         $print = '';
         if (! is_array($text)) {
-
-            return $print;
-
             return $text;
         }
 

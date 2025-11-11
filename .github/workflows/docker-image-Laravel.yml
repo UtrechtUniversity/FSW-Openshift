@@ -129,6 +129,9 @@ jobs:
             storage/logs/
   build:
     needs: [ laravel-tests ]
+    ## if one of the above jobs does not run, this job should start.
+    ## This job runs when upstream jobs are either successful or skipped, but not if any have failed.
+    if: ${{ always() && !contains(needs.*.result, 'failure') }}
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:

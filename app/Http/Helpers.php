@@ -50,7 +50,8 @@ if (! function_exists('csvToArray')) {
         }
 
         $data = [];
-        if (($handle = fopen($filename, 'r')) !== false) {
+        $handle = fopen($filename, 'r');
+        if ($handle !== false) {
             $headerSet = false;
             while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
                 if (empty($headers) && ! $headerSet) {

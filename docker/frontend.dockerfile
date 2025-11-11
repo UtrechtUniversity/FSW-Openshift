@@ -15,4 +15,5 @@ RUN chgrp -R 0 /var/www && \
 
 RUN npm install
 EXPOSE 7050
+
 CMD "npm" "run" "dev"

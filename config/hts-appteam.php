@@ -13,7 +13,7 @@ return [
         'oidc'
     ],
 
-    'force_https' => env('FORCE_HTTPS',true),
+    'force_https' => env('FORCE_HTTPS', true),
 
      /*
       * The field used in the database to identify a user

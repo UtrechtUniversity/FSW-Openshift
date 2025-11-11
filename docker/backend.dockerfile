@@ -1,72 +1,74 @@
-FROM php:8.2-fpm
+FROM php:8.3.8-apache AS apache
 
-COPY composer.lock composer.json /var/www/
 # set workdir
+RUN mkdir -p /var/www/
 WORKDIR /var/www
 
 # upgrades!
 RUN apt-get update
 RUN apt-get -y dist-upgrade
-RUN apt-get -qq install -y zip
+RUN apt-get install -y dos2unix
 
-RUN apt-get -qq install -y sudo nano
-RUN apt-get -qq install -y mariadb-client
-
-RUN apt-get -qq install -y libonig-dev
-RUN apt-get -qq install -y ca-certificates curl gnupg git
-
-# required for sending mail.
-RUN apt-get -qq install -y sendmail
-RUN apt-get -qq install -y libzip-dev
-RUN apt-get -qq install -y zlib1g-dev
-
-# install mysql
-RUN docker-php-ext-install pdo_mysql mysqli
+RUN apt-get install -y nano
+RUN apt-get install -y git
+RUN apt-get install -y zip unzip libzip-dev
+RUN apt-get install -y libxml2-dev
+RUN apt-get install -y wget
+RUN apt-get install -y sudo
+RUN apt-get install -y iputils-ping
+RUN apt-get install -y locales locales-all
+RUN apt-get install -y libpng-dev
+RUN apt-get install -y socat
+RUN apt-get install -y netcat-openbsd
 
 # install additional PHP extensions
-RUN  apt-get -qq install -y libmcrypt-dev \
-        libmagickwand-dev --no-install-recommends \
-        && pecl install mcrypt-1.0.7 \
-        && docker-php-ext-install pdo_mysql \
-        && docker-php-ext-enable mcrypt
+RUN docker-php-ext-install pdo_mysql mysqli soap zip gd
 
 RUN apt-get clean -y
-
-# email configuration
-RUN echo "sendmail_path='/usr/sbin/sendmail -t -i --smtp-addr=\"mail.docker:1025\"'" >> /usr/local/etc/php/conf.d/sendmail.ini
-RUN sed -i '/#!\/bin\/sh/aservice sendmail restart' /usr/local/bin/docker-php-entrypoint
-RUN sed -i '/#!\/bin\/sh/aecho "$(hostname -i)\t$(hostname) $(hostname).localhost" >> /etc/hosts' /usr/local/bin/docker-php-entrypoint
 
 # set corrent TimeZone
 ENV TZ=Europe/Amsterdam
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# install additional webserver packages
+RUN a2enmod ssl
+RUN a2enmod rewrite
+RUN a2enmod headers
+
+# install NodeJS
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash
+RUN apt-get install -y nodejs
+
+# copy httpd files
+COPY ./docker/httpd.conf /etc/apache2/sites-enabled/000-default.conf
+
 # copy webapp files
-COPY .. /var/www
+COPY ./ /var/www
 
-# install & run composer
+# copy github token
 COPY ./docker/auth.json /root/.composer/auth.json
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
-# run composer
-RUN composer install
+# install composer
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 # install self signed certifcates to thrust other local dev environments
 COPY ./docker/certificates/docker.dev.crt /usr/local/share/ca-certificates
 RUN cd /usr/local/share/ca-certificates && update-ca-certificates
 
-COPY ./docker/docker.env /var/www/.env
+# add /var/scripts to $PATH
+ENV PATH="/var/scripts:${PATH}"
 
-RUN chmod -R a+rw /var/www/storage
-RUN php artisan key:generate
+# toch some files
+RUN touch /var/log/heartbeat.log
+RUN touch /var/log/runner.log
+RUN chown www-data /var/log/heartbeat.log
+RUN chown www-data /var/log/runner.log
+
+RUN touch /var/build
 
 # entrypoint
 COPY ./docker/backend-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh
-
-RUN php artisan optimize
+RUN dos2unix /entrypoint.sh
 
 ENTRYPOINT /entrypoint.sh
-EXPOSE 9000
-
-CMD ["php-fpm"]

@@ -2,6 +2,8 @@ services:
   backend:
     container_name: openshift_backend
     hostname: openshift.docker.dev
+    external_links:
+      - hts-appteam-saml-idp
     build:
       context: .
       dockerfile: docker/backend.dockerfile
@@ -10,16 +12,16 @@ services:
     networks:
       - default
       - hts-appteam-local-dev
-    ports:
-      - "9000:9000"
+#    ports:
+#      - "8050:8050"
     env_file:
       - docker/keys.env
     environment:
-      VIRTUAL_HOST: openshift.docker.dev
-      VIRTUAL_PROTO: https
-      VIRTUAL_PORT: 443
-      DUSK_DRIVER_URL: http://seleniarm.docker.dev:4444/wd/hub
-      DUSK_START_MAXIMIZED: true
+      - VIRTUAL_HOST=openshift.docker.dev
+      - VIRTUAL_PROTO=https
+      - VIRTUAL_PORT=443
+      - DUSK_DRIVER_URL=http://seleniarm.docker.dev:4444/wd/hub
+      - DUSK_START_MAXIMIZED=true
   frontend:
     container_name: openshift_frontend
     build:
@@ -29,22 +31,6 @@ services:
     working_dir: /var/www
     ports:
       - "7050:7050"
-    networks:
-      - default
-      - hts-appteam-local-dev
-  web:
-    container_name: openshift_nginx
-    hostname: openshift.docker.dev
-    build:
-      context: ./
-      dockerfile: docker/nginx.dockerfile
-    environment:
-      - VIRTUAL_HOST=openshift.docker.dev
-      - VIRTUAL_PROTO=https
-      - VIRTUAL_PORT=443
-    volumes:
-      - ./:/var/www
-      - ./storage/logs/:/var/log/nginx
     networks:
       - default
       - hts-appteam-local-dev

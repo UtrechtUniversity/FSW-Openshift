@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y nodejs npm
 
@@ -17,16 +17,15 @@ RUN apt-get -qq install -y curl gnupg git
 
 # testing fpm:
 RUN apt-get -qq install -y libfcgi0ldbl procps
-
 # install postgres
+RUN apt-get -qq install -y software-properties-common
 RUN apt-get -qq install -y libpq-dev
-RUN docker-php-ext-install pdo pdo_pgsql pgsql intl
 
 # install additional PHP extensions
 RUN  apt-get -qq install -y libmcrypt-dev \
         libmagickwand-dev --no-install-recommends \
         && pecl install mcrypt-1.0.7 \
-        && docker-php-ext-install pdo_mysql \
+        && docker-php-ext-install pdo pdo_pgsql pgsql intl \
         && docker-php-ext-enable mcrypt
 
 RUN apt-get clean -y

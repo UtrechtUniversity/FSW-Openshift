@@ -19,8 +19,7 @@ RUN apt-get -qq install -y curl gnupg git
 RUN apt-get -qq install -y libfcgi0ldbl procps
 # install postgres
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y software-properties-common
 RUN apt-get -qq install -y libpq-dev
 RUN docker-php-ext-install pdo pdo_pgsql pgsql intl
 

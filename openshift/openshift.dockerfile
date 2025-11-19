@@ -17,8 +17,8 @@ RUN apt-get -qq install -y curl gnupg git
 
 # testing fpm:
 RUN apt-get -qq install -y libfcgi0ldbl procps
+
 # install postgres
-RUN apt-get -qq install -y software-properties-common
 RUN apt-get -qq install -y libpq-dev
 RUN docker-php-ext-install pdo pdo_pgsql pgsql intl
 

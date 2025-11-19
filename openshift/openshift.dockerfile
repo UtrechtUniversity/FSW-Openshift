@@ -11,15 +11,18 @@ RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y zip
 
 RUN apt-get -qq install -y sudo nano
-RUN apt-get -qq install -y mariadb-client
 
 RUN apt-get -qq install -y libonig-dev
 RUN apt-get -qq install -y curl gnupg git
 
 # testing fpm:
 RUN apt-get -qq install -y libfcgi0ldbl procps
-# install mysql
-RUN docker-php-ext-install pdo_mysql mysqli
+# install postgres
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    rm -rf /var/lib/apt/lists/*
+RUN apt-get -qq install -y libpq-dev
+RUN docker-php-ext-install pdo pdo_pgsql pgsql intl
 
 # install additional PHP extensions
 RUN  apt-get -qq install -y libmcrypt-dev \

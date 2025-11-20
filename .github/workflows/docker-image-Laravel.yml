@@ -92,7 +92,7 @@ jobs:
       - name: Copy config
         run: |
           php -r "copy('.env.testing', '.env');"
-          sed -i 's/testdb.docker.dev/127.0.0.1/' .env.testing
+          sed -i 's/testdb.docker.dev/postgres/' .env.testing
       - name: Install Dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]

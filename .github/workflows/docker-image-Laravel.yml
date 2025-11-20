@@ -23,7 +23,6 @@ jobs:
         id: changes
         # Set outputs using the command.
         run: echo "ts=$(git diff --diff-filter=d --name-only origin/develop..${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
-
   phpcsmd:
     runs-on: ubuntu-latest
     # require the first job to have run
@@ -35,7 +34,6 @@ jobs:
         uses: actions/checkout@main
       - name: Show changed files
         run: echo ${{needs.changedfiles.outputs.ts}}
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -75,6 +73,16 @@ jobs:
     ## This job runs when upstream jobs are either successful or skipped, but not if any have failed.
     if: ${{ always() && !contains(needs.*.result, 'failure') }}
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: testing
+          POSTGRES_PASSWORD: testing
+          POSTGRES_DB: secret
+        ports:
+          - 5432/tcp
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: shivammathur/setup-php@v2
         with:
@@ -84,16 +92,6 @@ jobs:
         run: |
           php -r "copy('.env.testing', '.env');"
           sed -i 's/testdb.docker.dev/127.0.0.1/' .env.testing
-      - name: Start MariaDB
-        uses: getong/mariadb-action@v1.1
-        with:
-          # MYSQL_DATABASE - name for the default database that is created
-          mysql database: testing
-          # MYSQL_USER - create the specified user with superuser power for created database
-          mysql user: testing
-          # MYSQL_PASSWORD - specified superuser password which user is power for created database
-          mysql password: secret
-
       - name: Install Dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{secrets.COMPOSER_AUTH}}"} }' # [tl! **]

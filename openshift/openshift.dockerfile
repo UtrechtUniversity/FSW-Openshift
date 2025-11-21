@@ -20,9 +20,9 @@ RUN apt-get -qq install -y libfcgi0ldbl procps
 # install additional PHP extensions
 RUN  apt-get -qq install -y libmcrypt-dev
 RUN  apt-get -qq install -y libmagickwand-dev --no-install-recommends
-RUN  apt-get -qq install -y pecl install mcrypt-1.0.7
-RUN  apt-get -qq install -y docker-php-ext-install pdo intl
-RUN  apt-get -qq install -y docker-php-ext-enable mcrypt
+RUN  pecl install mcrypt-1.0.7
+RUN  docker-php-ext-install pdo intl
+RUN  docker-php-ext-enable mcrypt
 
 # install postgres
 # Install system dependencies

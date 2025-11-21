@@ -17,15 +17,23 @@ RUN apt-get -qq install -y curl gnupg git
 # testing fpm:
 RUN apt-get -qq install -y libfcgi0ldbl procps
 
-# install postgres
-RUN apt-get -qq install -y libpq-dev
-
 # install additional PHP extensions
 RUN  apt-get -qq install -y libmcrypt-dev
 RUN  apt-get -qq install -y libmagickwand-dev --no-install-recommends
 RUN  apt-get -qq install -y pecl install mcrypt-1.0.7
-RUN  apt-get -qq install -y docker-php-ext-install pdo pdo_pgsql pgsql intl
+RUN  apt-get -qq install -y docker-php-ext-install pdo intl
 RUN  apt-get -qq install -y docker-php-ext-enable mcrypt
+
+# install postgres
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install -j$(nproc) pdo_pgsql pgsql \
+    && docker-php-ext-enable pdo_pgsql pgsql
+
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get clean -y
 

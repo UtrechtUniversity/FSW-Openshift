@@ -11,21 +11,21 @@ RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y zip
 
 RUN apt-get -qq install -y sudo nano
-
 RUN apt-get -qq install -y libonig-dev
 RUN apt-get -qq install -y curl gnupg git
 
 # testing fpm:
 RUN apt-get -qq install -y libfcgi0ldbl procps
+
 # install postgres
 RUN apt-get -qq install -y libpq-dev
 
 # install additional PHP extensions
-RUN  apt-get -qq install -y libmcrypt-dev \
-        libmagickwand-dev --no-install-recommends \
-        && pecl install mcrypt-1.0.7 \
-        && docker-php-ext-install pdo pdo_pgsql pgsql intl \
-        && docker-php-ext-enable mcrypt
+RUN  apt-get -qq install -y libmcrypt-dev
+RUN  apt-get -qq install -y libmagickwand-dev --no-install-recommends
+RUN  apt-get -qq install -y pecl install mcrypt-1.0.7
+RUN  apt-get -qq install -y docker-php-ext-install pdo pdo_pgsql pgsql intl
+RUN  apt-get -qq install -y docker-php-ext-enable mcrypt
 
 RUN apt-get clean -y
 
@@ -51,8 +51,6 @@ RUN php artisan optimize
 ENTRYPOINT /entrypoint.sh
 
 RUN npm install
-
-#COPY ./openshift/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 EXPOSE 8080
 EXPOSE 9000

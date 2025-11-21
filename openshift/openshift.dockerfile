@@ -2,11 +2,6 @@ FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y nodejs npm
 
-RUN apt-get update && \
-    apt-get install -y build-essential && \
-    apt-get install -y software-properties-common && \
-    rm -rf /var/lib/apt/lists/*
-
 COPY composer.lock composer.json /var/www/
 # set workdir
 WORKDIR /var/www
@@ -30,7 +25,7 @@ RUN  docker-php-ext-enable mcrypt
 
 # install postgres
 # Install system dependencies
-RUN apt-get update && apt-get install -y libpq-dev
+RUN apt-get update && apt-get install -y libpq-dev postgresql-client
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pdo intl pdo_pgsql pgsql
 

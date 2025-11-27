@@ -34,17 +34,16 @@ services:
     networks:
       - default
       - hts-appteam-local-dev
-  mariadb:
-    hostname: openshift_mariadb.docker.dev
-    container_name: openshift_mariadb
-    image: "mariadb:latest"
+  postgres:
+    hostname: openshift_postgres.docker.dev
+    container_name: openshift_postgres
+    image: "postgres:latest"
     ports:
-      - "8050:3306"
+      - "8050:5432"
     environment:
-      MYSQL_ROOT_PASSWORD: "secret"
-      MYSQL_DATABASE: "development"
-      MYSQL_USER: "development"
-      MYSQL_PASSWORD: "secret"
+      POSTGRES_DB: "development"
+      POSTGRES_USER: "development"
+      POSTGRES_PASSWORD: "secret"
     networks:
       - default
       - hts-appteam-local-dev

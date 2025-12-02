@@ -13,7 +13,7 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-                        Test versie v0.3.4
+                        Nieuwe handige dingen.
                         @auth()
                             {{ __( Auth::user()->name . ' You are logged in!') }}
                             {{ 'Je hebt de rol: ' . Auth::user()->role->name}}

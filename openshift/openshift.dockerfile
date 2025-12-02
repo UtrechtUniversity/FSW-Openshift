@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y nodejs npm
 
@@ -11,22 +11,26 @@ RUN apt-get -y dist-upgrade
 RUN apt-get -qq install -y zip
 
 RUN apt-get -qq install -y sudo nano
-RUN apt-get -qq install -y mariadb-client
-
 RUN apt-get -qq install -y libonig-dev
 RUN apt-get -qq install -y curl gnupg git
 
 # testing fpm:
 RUN apt-get -qq install -y libfcgi0ldbl procps
-# install mysql
-RUN docker-php-ext-install pdo_mysql mysqli
 
 # install additional PHP extensions
-RUN  apt-get -qq install -y libmcrypt-dev \
-        libmagickwand-dev --no-install-recommends \
-        && pecl install mcrypt-1.0.7 \
-        && docker-php-ext-install pdo_mysql \
-        && docker-php-ext-enable mcrypt
+RUN  apt-get -qq install -y libmcrypt-dev
+RUN  apt-get -qq install -y libmagickwand-dev --no-install-recommends
+RUN  pecl install mcrypt-1.0.7
+RUN  docker-php-ext-enable mcrypt
+
+# install postgres
+# Install system dependencies
+RUN apt-get update && apt-get install -y libpq-dev postgresql-client
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+RUN docker-php-ext-install pdo intl pdo_pgsql pgsql
+
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get clean -y
 
@@ -52,8 +56,6 @@ RUN php artisan optimize
 ENTRYPOINT /entrypoint.sh
 
 RUN npm install
-
-#COPY ./openshift/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 EXPOSE 8080
 EXPOSE 9000

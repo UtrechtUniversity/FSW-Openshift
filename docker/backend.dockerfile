@@ -5,6 +5,10 @@ RUN mkdir -p /var/www/
 WORKDIR /var/www
 
 # upgrades!
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN apt-get update
 RUN apt-get -y dist-upgrade
 RUN apt-get install -y dos2unix
@@ -19,14 +23,14 @@ RUN apt-get install -y iputils-ping
 RUN apt-get install -y locales locales-all
 RUN apt-get install -y libpng-dev
 RUN apt-get install -y socat
-RUN apt-get install -y netcat-openbsd
+RUN apt-get install -y netcat-openbsd libpq-dev
 
 # install additional PHP extensions
-RUN docker-php-ext-install pdo_mysql mysqli soap zip gd
+RUN docker-php-ext-install soap zip gd pdo pdo_pgsql pgsql intl
 
 RUN apt-get clean -y
 
-# set corrent TimeZone
+# set correct TimeZone
 ENV TZ=Europe/Amsterdam
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 

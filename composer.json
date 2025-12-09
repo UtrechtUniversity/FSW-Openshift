@@ -17,7 +17,8 @@
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
-        "utrecht_university/hts_appteam_laravelbase": "^2.0"
+        "spatie/ray": "^1.44",
+        "utrecht_university/hts_appteam_laravelbase": "dev-release/GS_upgrade_to_vuetify"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

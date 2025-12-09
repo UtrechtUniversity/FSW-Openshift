@@ -10,7 +10,8 @@ return [
      * saml, oidc or local
      */
     'login_type' => [
-        'oidc'
+        'oidc',
+        'local'
     ],
 
     'force_https' => env('FORCE_HTTPS', true),

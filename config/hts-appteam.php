@@ -36,6 +36,8 @@ return [
         //'/students'
     ],
 
+    'redirect_after_login' => 'home',
+
     /*
      * All SAML Settings
      */

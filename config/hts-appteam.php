@@ -230,7 +230,7 @@ return [
         'login_route' => [
             'login'    => true,
             'logout'   => true,
-            'register' => false,
+            'register' => true,
             'reset'    => true,   // for resetting passwords
             // TODO: Confirm and verify is not finished jet.
             'confirm'  => false,  // for additional password confirmations

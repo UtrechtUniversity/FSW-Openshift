@@ -13,7 +13,7 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-                        Nieuwe handige dingen Nieuwe versie 31 maart 2026.
+                        Nieuwe handige dingen Nieuwe versie 14 april 2026.
                         @auth()
                             {{ __( Auth::user()->name . ' You are logged in!') }}
                             {{ 'Je hebt de rol: ' . Auth::user()->role->name}}

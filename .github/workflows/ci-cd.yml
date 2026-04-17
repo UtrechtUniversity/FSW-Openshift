@@ -1,0 +1,225 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: ["develop", "master", "feature/*", "bugfix/*", "hotfix/*"]
+    tags: ["v*.*.*"]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ============================================================================
+  # STAGE 1: Code Quality (changedfiles, phpcsmd, phpstan)
+  # ============================================================================
+  changedfiles:
+    runs-on: ubuntu-latest
+    outputs:
+      ts: ${{ steps.changes.outputs.ts }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changes
+        run: echo "ts=$(git diff --diff-filter=d --name-only origin/develop..${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+
+  phpcsmd:
+    runs-on: ubuntu-latest
+    needs: changedfiles
+    if: ${{ needs.changedfiles.outputs.ts }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+
+      - name: Show changed files
+        run: echo ${{ needs.changedfiles.outputs.ts }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: ssh2
+          coverage: none
+          tools: composer, cs2pr, phpcs
+
+      - name: Install composer dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+        run: composer install -n --prefer-dist
+
+      - name: Check PHP code style
+        run: vendor/bin/phpcs --report-full
+
+      - name: Run PHP Mess Detector
+        run: FILES="${{ needs.changedfiles.outputs.ts }}" && vendor/bin/phpmd ${FILES// /,} text phpmd.xml --exclude vendor/,tests/
+
+  phpstan:
+    name: phpstan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          coverage: none
+
+      - name: Install composer dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+        run: composer install -n --prefer-dist
+
+      - name: Run Static Analysis
+        run: ./vendor/bin/phpstan analyse --error-format=github
+
+  # ============================================================================
+  # STAGE 2: Laravel Tests
+  # ============================================================================
+  laravel-tests:
+    needs: [phpcsmd, phpstan]
+    # Run if upstream jobs succeeded or were skipped (but NOT if any failed)
+    if: ${{ always() && !contains(needs.*.result, 'failure') }}
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: testing
+          POSTGRES_DB: testing
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+          - 5432/tcp
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+
+      - uses: actions/checkout@main
+
+      - name: Copy config
+        run: |
+          php -r "copy('.env.testing', '.env');"
+          sed -i 's/testdb.docker.dev/127.0.0.1/' .env.testing
+
+      - name: Install Dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: NPM install & build
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+
+      - run: npm install
+      - run: npm run build
+      - run: npm prune --production
+      - run: rm -Rf node_modules
+
+      - name: Generate key
+        run: php artisan key:generate
+
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+
+      - name: Migrate
+        run: |
+          php artisan config:clear
+          php artisan migrate --env=testing
+
+      - name: Execute tests defined in CI (Unit and Feature tests) via Pest tests
+        run: |
+          pwd
+          ls -la
+          vendor/bin/pest --no-coverage
+
+      - name: Archive Test Results
+        uses: actions/upload-artifact@v7
+        if: ${{ always() }}
+        with:
+          name: test-results
+          path: |
+            tests/_output/debug/
+            storage/logs/
+
+  # ============================================================================
+  # STAGE 3: Build and Publish Docker Images
+  # ============================================================================
+  build:
+    needs: [laravel-tests]
+    # Run if upstream jobs succeeded or were skipped (but NOT if any failed)
+    if: ${{ always() && !contains(needs.*.result, 'failure') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    strategy:
+      matrix:
+        include:
+          - image: ghcr.io/utrechtuniversity/fsw-openshift
+            name: fsw-openshift
+            dockerfile: openshift/openshift.dockerfile
+          - image: ghcr.io/utrechtuniversity/fsw-openshift-frontend
+            name: fsw-openshift-frontend
+            dockerfile: openshift/frontend.dockerfile
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ matrix.image }}
+          tags: |
+            type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
+            type=raw,value=master,enable=${{ github.ref == 'refs/heads/master' }}
+            type=raw,value=feature-${{ github.ref_name }},enable=${{ startsWith(github.ref, 'refs/heads/feature/') }}
+            type=raw,value=bugfix-${{ github.ref_name }},enable=${{ startsWith(github.ref, 'refs/heads/bugfix/') }}
+            type=raw,value=hotfix-${{ github.ref_name }},enable=${{ startsWith(github.ref, 'refs/heads/hotfix/') }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Install dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+        run: composer install --prefer-dist --no-suggest --no-progress 
+          && npm install && npm run build && npm prune --production
+
+      - name: Build and push Docker backend image
+        id: push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: delete untagged versions.
+        uses: actions/delete-package-versions@v5
+        with:
+          delete-only-untagged-versions: true
+          package-name: ${{ matrix.name }}
+          package-type: "container"

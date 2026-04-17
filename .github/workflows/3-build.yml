@@ -1,0 +1,85 @@
+name: 3. Build and Publish Docker Images
+
+on:
+  workflow_run:
+    workflows: ["2. Laravel Tests"]
+    types:
+      - completed
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    # Only run if the previous workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    strategy:
+      matrix:
+        include:
+          - image: ghcr.io/utrechtuniversity/fsw-openshift
+            name: fsw-openshift
+            dockerfile: openshift/openshift.dockerfile
+          - image: ghcr.io/utrechtuniversity/fsw-openshift-frontend
+            name: fsw-openshift-frontend
+            dockerfile: openshift/frontend.dockerfile
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ matrix.image }}
+          tags: |
+            type=raw,value=develop,enable=${{ github.event.workflow_run.head_branch == 'develop' }}
+            type=raw,value=master,enable=${{ github.event.workflow_run.head_branch == 'master' }}
+            type=raw,value=feature-${{ github.event.workflow_run.head_branch }},enable=${{ startsWith(github.event.workflow_run.head_branch, 'feature/') }}
+            type=raw,value=bugfix-${{ github.event.workflow_run.head_branch }},enable=${{ startsWith(github.event.workflow_run.head_branch, 'bugfix/') }}
+            type=raw,value=hotfix-${{ github.event.workflow_run.head_branch }},enable=${{ startsWith(github.event.workflow_run.head_branch, 'hotfix/') }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Install dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+        run: composer install --prefer-dist --no-suggest --no-progress 
+          && npm install && npm run build && npm prune --production
+
+      - name: Build and push Docker backend image
+        id: push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: delete untagged versions.
+        uses: actions/delete-package-versions@v5
+        with:
+          delete-only-untagged-versions: true
+          package-name: ${{ matrix.name }}
+          package-type: "container"

@@ -1,8 +1,14 @@
 <?php
 
+use App\Http\Controllers\DbHeartbeatController;
+use App\Http\Controllers\FileHeartbeatController;
+use App\Http\Controllers\MigrationController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,5 +32,20 @@ Route::get('/', function () {
         Log::info('Index page visited by unauthenticated user');
     }
 
-    return view('welcome');
+    return Inertia::render('Welcome');
 })->name('home');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/db-heartbeat', [DbHeartbeatController::class, 'index'])->name('db-heartbeat');
+    Route::post('/db-heartbeat', [DbHeartbeatController::class, 'store'])->name('db-heartbeat.add');
+
+    Route::get('/file-heartbeat', [FileHeartbeatController::class, 'index'])->name('file-heartbeat');
+    Route::post('/file-heartbeat', [FileHeartbeatController::class, 'store'])->name('file-heartbeat.add');
+
+    // Admin routes - User and Role CRUD
+    Route::middleware(['can:isAdmin'])->group(function () {
+        Route::resource('users', UserController::class);
+        Route::resource('roles', RoleController::class);
+        Route::get('migrations', [MigrationController::class, 'index'])->name('migrations.index');
+    });
+});

@@ -23,9 +23,9 @@ class Role extends Model
 {
     protected $table = 'roles';
 
-    const USER = 1;
+    const USER = 2;
 
-    const ADMINISTRATOR = 2;
+    const ADMINISTRATOR = 1;
 
     protected $fillable = [
         'name',

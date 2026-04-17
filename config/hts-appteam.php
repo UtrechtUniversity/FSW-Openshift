@@ -34,6 +34,10 @@ return [
         // Example:
         //'/students'
     ],
+    /**
+     * the route where the user should be redirected to after a successful login
+     */
+    'redirect_after_login' => 'home',
 
     /*
      * All SAML Settings

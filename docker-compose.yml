@@ -24,11 +24,11 @@ services:
       - DUSK_START_MAXIMIZED=true
   frontend:
     container_name: openshift_frontend
-    build:
-      dockerfile: docker/frontend.dockerfile
+    image: node:current-alpine
     volumes:
-      - ./:/var/www
-    working_dir: /var/www
+      - ./:/var/www/public
+    entrypoint: [ "npm", "run", "dev", "--force" ]
+    working_dir: /var/www/public
     ports:
       - "7050:7050"
     networks:

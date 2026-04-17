@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * Class Role
+ * Class User
  *
  * @property int $id
  * @property string $name
@@ -18,6 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string|null $solis_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Role|null $role
  */
 class User extends Authenticatable
 {

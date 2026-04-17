@@ -17,7 +17,7 @@ class RoleController extends Controller
             'roles' => Role::withCount('users')
                 ->orderBy('name')
                 ->paginate(15)
-                ->through(fn ($role) => [
+                ->through(fn (Role $role) => [
                     'id' => $role->id,
                     'name' => $role->name,
                     'users_count' => $role->users_count,

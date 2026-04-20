@@ -14,8 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command(AddDbHeartbeatEntry::class)->everyMinute();
-        $schedule->command(AddFileHeartbeatEntry::class)->everyMinute();
+        $schedule->command(AddDbHeartbeatEntry::class)->everyTenMinutes();
+        $schedule->command(AddFileHeartbeatEntry::class)->everyTenMinutes();
     }
 
     /**

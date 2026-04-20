@@ -27,7 +27,8 @@ RUN  docker-php-ext-enable mcrypt
 # Install system dependencies
 RUN apt-get update && apt-get install -y libpq-dev postgresql-client
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
-RUN docker-php-ext-install pdo intl pdo_pgsql pgsql
+RUN docker-php-ext-install pdo intl pdo_pgsql pgsql pcntl
+RUN docker-php-ext-configure pcntl --enable-pcntl
 
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

@@ -49,6 +49,7 @@ jobs:
       - name: Install composer dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+          BROADCAST_DRIVER: log
         run: composer install -n --prefer-dist
 
       - name: Check PHP code style
@@ -72,6 +73,7 @@ jobs:
       - name: Install composer dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+          BROADCAST_DRIVER: log
         run: composer install -n --prefer-dist
 
       - name: Run Static Analysis
@@ -242,6 +244,7 @@ jobs:
       - name: Install dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+          BROADCAST_DRIVER: log
         run: composer install --prefer-dist --no-suggest --no-progress 
           && npm install && npm run build && npm prune --production
 

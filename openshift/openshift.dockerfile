@@ -35,6 +35,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get clean -y
 
+# Install composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 # set corrent TimeZone
 ENV TZ=Europe/Amsterdam
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -43,6 +46,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY .. /var/www
 
 COPY ./openshift/openshift.env /var/www/.env
+
+# Install production dependencies only (excludes dev packages like spatie/laravel-ray)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 RUN chmod -R a+rw /var/www/storage
 RUN chmod -R a+rw /var/www/bootstrap/cache

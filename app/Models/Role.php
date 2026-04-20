@@ -17,15 +17,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property Collection|User[] $users
+ * @property-read Collection<int, User> $users
+ * @property-read int|null $users_count
  */
 class Role extends Model
 {
     protected $table = 'roles';
 
-    const USER = 1;
+    const USER = 2;
 
-    const ADMINISTRATOR = 2;
+    const ADMINISTRATOR = 1;
+
+    const NOT_VALIDATED = 3;
 
     protected $fillable = [
         'name',

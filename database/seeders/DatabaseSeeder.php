@@ -14,29 +14,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
         Role::create([
-            'name' => 'user',
-            'created_at' => '2022-01-28T09:10:40.000000Z',
-            'updated_at' => '2022-01-28T09:10:42.000000Z',
-        ]);
-        Role::create([
+            'id' => 1,
             'name' => 'administrator',
             'created_at' => '2022-01-28T09:10:40.000000Z',
             'updated_at' => '2022-01-28T09:10:42.000000Z',
         ]);
 
+        Role::create([
+            'id' => 2,
+            'name' => 'user',
+            'created_at' => '2022-01-28T09:10:40.000000Z',
+            'updated_at' => '2022-01-28T09:10:42.000000Z',
+        ]);
+
+        Role::create([
+            'id' => 3,
+            'name' => 'not_validated',
+            'created_at' => '2022-01-28T09:10:40.000000Z',
+            'updated_at' => '2022-01-28T09:10:42.000000Z',
+        ]);
+
         User::create([
-            'name' => 'daan',
-            'role_id' => 2,
-            'email' => 'daan@test.nl',
+            'name' => '0219959',
+            'role_id' => 1,
+            'email' => 'd.asscheman@uu.nl.nl',
             'solis_id' => '0219959',
         ]);
         User::create([
-            'name' => 'daan2',
+            'name' => 'assch001',
             'role_id' => 2,
-            'email' => 'daan2@test.nl',
+            'email' => 'd.asscheman@acc.uu.nl',
             'solis_id' => 'assche001',
-        ]);;
+        ]);
     }
 }

@@ -11,11 +11,11 @@ return [
     | framework when an event needs to be broadcast. You may set this to
     | any of the connections defined in the "connections" array below.
     |
-    | Supported: "pusher", "ably", "redis", "log", "null"
+    | Supported: "reverb", "pusher", "ably", "redis", "log", "null"
     |
     */
 
-    'default' => env('BROADCAST_DRIVER', 'null'),
+    'default' => env('BROADCAST_DRIVER', 'reverb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,6 +29,21 @@ return [
     */
 
     'connections' => [
+
+        'reverb' => [
+            'driver' => 'reverb',
+            'key' => env('REVERB_APP_KEY'),
+            'secret' => env('REVERB_APP_SECRET'),
+            'app_id' => env('REVERB_APP_ID'),
+            'options' => [
+                'useTLS' => true,
+                'host' => parse_url(env('APP_URL'))['host'] ?? 'openshift.docker.dev',
+                'port' => env('REVERB_PORT'),
+                'scheme' => 'https',
+                'debug' => false,
+                'encrypted' => true,
+            ],
+        ],
 
         'pusher' => [
             'driver' => 'pusher',

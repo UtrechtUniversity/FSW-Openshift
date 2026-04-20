@@ -10,12 +10,12 @@ return [
      * saml, oidc or local
      */
     'login_type' => [
-        'oidc'
+        'oidc',
     ],
 
     'force_https' => env('FORCE_HTTPS', true),
 
-     /*
+    /*
       * The field used in the database to identify a user
       */
     'user_identifier_key' => env('AUTH_USER_IDENTIFIER_KEY', 'solis_id'),
@@ -32,8 +32,12 @@ return [
     ],
     'exclude_urls_for_auth_wildcard' => [
         // Example:
-        //'/students'
+        // '/students'
     ],
+    /**
+     * the route where the user should be redirected to after a successful login
+     */
+    'redirect_after_login' => 'home',
 
     /*
      * All SAML Settings
@@ -56,8 +60,8 @@ return [
             [
                 'attribute' => 'affiliation',
                 'exp' => 'IS', // IN, IS, NOT_IN, NOT,
-                'value' => 'employee'
-            ]
+                'value' => 'employee',
+            ],
         ],
 
         /*
@@ -80,7 +84,7 @@ return [
             'uuLegacyDepartment' => 'faculty',
             'department' => 'department',
             'mail' => 'email',
-            'urn:mace:dir:attribute-def:eduPersonAffiliation' => 'affiliation'
+            'urn:mace:dir:attribute-def:eduPersonAffiliation' => 'affiliation',
         ],
 
         /*
@@ -90,7 +94,7 @@ return [
         'required_attributes' => [
             'solis_id',
             'email',
-            'affiliation'
+            'affiliation',
         ],
 
         /*
@@ -98,7 +102,7 @@ return [
          */
         'unique_attributes' => [
             'solis_id',
-            'email'
+            'email',
         ],
 
         /*
@@ -106,7 +110,7 @@ return [
          * For example in the 'allow_registration_filter'
          */
         'not_stored_attributes' => [
-            'affiliation'
+            'affiliation',
         ],
     ],
 
@@ -125,7 +129,7 @@ return [
          * Default scopes
          */
         'scopes' => [
-            'urn:uu.nl:idp:scope:oauth:fsw:appteam'
+            'urn:uu.nl:idp:scope:oauth:fsw:appteam',
         ],
 
         /*
@@ -144,17 +148,13 @@ return [
         /*
          * Are users which are not locally known allowed to use this application?
          */
-        'allow_registration' => false,
+        'allow_registration' => true,
 
         /*
          * Allow registration only based on these filters
          */
         'allow_registration_filter' => [
-            [
-                'attribute' => 'locale',
-                'exp' => 'IS', // IN, IS, NOT_IN, NOT,
-                'value' => 'NL'
-            ]
+            // Filter removed - all authenticated OIDC users can register
         ],
 
         /*
@@ -166,7 +166,7 @@ return [
         'requested_attributes' => [
             'uuShortID' => 'solis_id',
             'displayName' => 'name',
-            'mail' => 'email'
+            'mail' => 'email',
         ],
 
         /*
@@ -176,7 +176,7 @@ return [
         'required_attributes' => [
             'solis_id',
             'email',
-            'affiliation'
+            'affiliation',
         ],
 
         /*
@@ -184,7 +184,7 @@ return [
          */
         'unique_attributes' => [
             'solis_id',
-            'email'
+            'email',
         ],
 
         /*
@@ -201,7 +201,7 @@ return [
          * For example in the 'allow_registration_filter'
          */
         'not_stored_attributes' => [
-            'locale'
+            //            'locale'
         ],
     ],
 
@@ -218,20 +218,20 @@ return [
             'solis_id' => 'solis_id',
             'name' => 'name',
             'email' => 'email',
-            'password' => 'password'
+            'password' => 'password',
         ],
 
         /*
          * For login_type = local we can define which routes we want to use.
          */
         'login_route' => [
-            'login'    => true,
-            'logout'   => true,
+            'login' => true,
+            'logout' => true,
             'register' => false,
-            'reset'    => true,   // for resetting passwords
+            'reset' => true,   // for resetting passwords
             // TODO: Confirm and verify is not finished jet.
-            'confirm'  => false,  // for additional password confirmations
-            'verify'   => false,  // for email verification
+            'confirm' => false,  // for additional password confirmations
+            'verify' => false,  // for email verification
         ],
 
         /*
@@ -239,6 +239,6 @@ return [
          * if you have multiple login types and you want to force UU users
          * to use SAML or OIDC login
          */
-        'exclude_uu_users_from_local_login' => true
+        'exclude_uu_users_from_local_login' => true,
     ],
 ];

@@ -1,12 +1,17 @@
 import { defineConfig } from 'vite';
 import fs from 'fs';
 import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+import vuetify from 'vite-plugin-vuetify';
 import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 import path from 'path';
 
 import {viteStaticCopy} from "vite-plugin-static-copy";
 
-dotenv.config() // load env vars from .env
+// Load and expand env vars (supports ${VAR} syntax)
+const env = dotenv.config();
+dotenvExpand.expand(env);
 
 const host = `${process.env.VITE_API_URL ?? 'http://localhost:3000'}`;
 const port = `${process.env.VITE_PORT ?? '3000'}`;
@@ -21,6 +26,17 @@ export default defineConfig({
             ],
             refresh: true,
         }),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
+        }),
+        vuetify({
+            autoImport: true,
+        }),
         viteStaticCopy({
             targets: [
                 {
@@ -32,7 +48,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+            '@': path.resolve(__dirname, 'resources/js'),
         }
     },
     server: {
@@ -44,20 +60,8 @@ export default defineConfig({
         port: port,
         cors: true,
         hmr: {
-            host: host,
+            host: 'openshift.docker.dev',
             protocol: 'wss'
         },
-
-        // https: {
-        //     key: fs.readFileSync('docker/certificates/docker.dev.key'),
-        //     cert: fs.readFileSync('docker/certificates/docker.dev.crt'),
-        // },
-        // host: host,
-        // hmr: {
-        //     host: host,
-        //     clientPort: port,
-        //     port: port,
-        //     protocol: 'wss'
-        // },
     },
 });

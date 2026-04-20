@@ -12,7 +12,8 @@ services:
     networks:
       - default
       - hts-appteam-local-dev
-#    ports:
+    ports:
+      - "6050:6050"
 #      - "8050:8050"
     env_file:
       - docker/keys.env
@@ -22,13 +23,29 @@ services:
       - VIRTUAL_PORT=443
       - DUSK_DRIVER_URL=http://seleniarm.docker.dev:4444/wd/hub
       - DUSK_START_MAXIMIZED=true
-  frontend:
-    container_name: openshift_frontend
+  cron:
+    container_name: openshift_cron
     build:
-      dockerfile: docker/frontend.dockerfile
+      context: .
+      dockerfile: docker/backend.dockerfile
     volumes:
       - ./:/var/www
-    working_dir: /var/www
+    networks:
+      - default
+      - hts-appteam-local-dev
+    env_file:
+      - docker/keys.env
+    entrypoint: ["/bin/sh", "-c", "while true; do php /var/www/artisan schedule:run --verbose --no-interaction; sleep 60; done"]
+    depends_on:
+      - backend
+      - postgres
+  frontend:
+    container_name: openshift_frontend
+    image: node:current-alpine
+    volumes:
+      - ./:/var/www/public
+    entrypoint: [ "npm", "run", "dev", "--force" ]
+    working_dir: /var/www/public
     ports:
       - "7050:7050"
     networks:

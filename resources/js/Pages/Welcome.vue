@@ -24,6 +24,11 @@
             <div class="mt-2">
               Je hebt de rol: <strong>{{ auth.user.role_name }}</strong>
             </div>
+            <div class="m-2">Add version during build</div>
+            <div class="m-2">Add websockets</div>
+            <div class="m-2">Add test email</div>
+            <div class="m-2"></div>
+            <div class="m-2"></div>
           </v-alert>
         </template>
         <template v-else>

@@ -29,6 +29,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        // Read frontend version from package.json
+        $packageJson = json_decode(file_get_contents(base_path('package.json')), true);
+        $frontendVersion = $packageJson['version'] ?? 'unknown';
+
+        // Read backend version from composer.json
+        $composerJson = json_decode(file_get_contents(base_path('composer.json')), true);
+        $backendVersion = $composerJson['version'] ?? 'unknown';
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user() ? [
@@ -45,6 +53,10 @@ class HandleInertiaRequests extends Middleware
                 'status' => fn () => $request->session()->get('status'),
             ],
             'appName' => config('app.name', 'FSW-Openshift'),
+            'versions' => [
+                'frontend' => $frontendVersion,
+                'backend' => $backendVersion,
+            ],
         ]);
     }
 }

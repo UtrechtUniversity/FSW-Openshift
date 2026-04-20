@@ -21,6 +21,12 @@ class AddDbHeartbeatEntry extends Command
 
         $this->info('Heartbeat entry added.');
 
+        // Delete entries older than 1 week
+        $deleted = DbHeartbeatEntry::where('recorded_at', '<', now()->subWeek())->delete();
+        if ($deleted > 0) {
+            $this->info("Deleted {$deleted} entries older than 1 week.");
+        }
+
         return Command::SUCCESS;
     }
 }

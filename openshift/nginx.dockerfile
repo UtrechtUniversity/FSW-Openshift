@@ -6,6 +6,7 @@ FROM nginxinc/nginx-unprivileged:stable-alpine
 
 EXPOSE 80
 EXPOSE 8080
+EXPOSE 6050
 EXPOSE 9000
 EXPOSE 9001
 EXPOSE 7050

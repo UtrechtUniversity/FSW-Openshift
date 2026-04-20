@@ -61,7 +61,7 @@ jobs:
     name: phpstan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -200,6 +200,44 @@ jobs:
             type=raw,value=hotfix-${{ github.ref_name }},enable=${{ startsWith(github.ref, 'refs/heads/hotfix/') }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+
+      - name: Set version from branch/tag
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            # For semver tags like v1.2.3
+            VERSION="${{ github.ref_name }}"
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            VERSION="develop"
+          elif [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            VERSION="master"
+          elif [[ "${{ github.ref }}" == refs/heads/feature/* ]]; then
+            VERSION="feature-${{ github.ref_name }}"
+          elif [[ "${{ github.ref }}" == refs/heads/bugfix/* ]]; then
+            VERSION="bugfix-${{ github.ref_name }}"
+          elif [[ "${{ github.ref }}" == refs/heads/hotfix/* ]]; then
+            VERSION="hotfix-${{ github.ref_name }}"
+          else
+            VERSION="${{ github.sha }}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Setting version to: $VERSION"
+
+      - name: Update version in package.json (frontend)
+        if: matrix.name == 'fsw-openshift-frontend'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          jq --arg v "$VERSION" '.version = $v' package.json > package.json.tmp && mv package.json.tmp package.json
+          echo "Updated package.json version to: $VERSION"
+          cat package.json | jq '.version'
+
+      - name: Update version in composer.json (backend)
+        if: matrix.name == 'fsw-openshift'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          jq --arg v "$VERSION" '.version = $v' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
+          echo "Updated composer.json version to: $VERSION"
+          cat composer.json | jq '.version'
 
       - name: Install dependencies
         env:

@@ -79,8 +79,6 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(`/users/${props.user.id}`, {
-    _method: 'put',
-  });
+  form.put(`/users/${props.user.id}`);
 };
 </script>

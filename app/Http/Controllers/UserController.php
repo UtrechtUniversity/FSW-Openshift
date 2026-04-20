@@ -26,6 +26,7 @@ class UserController extends Controller
                     'role_id' => $user->role_id,
                     'role_name' => $user->role->name ?? 'N/A',
                     'created_at' => $user->created_at?->format('Y-m-d H:i'),
+                    'is_not_validated' => $user->role_id === Role::NOT_VALIDATED,
                 ]),
         ]);
     }
@@ -101,5 +102,21 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+    /**
+     * Validate a not_validated user by changing their role to user.
+     */
+    public function validateUser(User $user)
+    {
+        if ($user->role_id !== Role::NOT_VALIDATED) {
+            return redirect()->route('users.index')->with('error', 'User is already validated.');
+        }
+
+        $user->update([
+            'role_id' => Role::USER,
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'User validated successfully.');
     }
 }

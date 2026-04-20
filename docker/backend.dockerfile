@@ -28,6 +28,10 @@ RUN apt-get install -y netcat-openbsd libpq-dev
 # install additional PHP extensions
 RUN docker-php-ext-install soap zip gd pdo pdo_pgsql pgsql intl
 
+#websockets/reverb
+RUN docker-php-ext-install pcntl
+RUN docker-php-ext-configure pcntl --enable-pcntl
+
 RUN apt-get clean -y
 
 # set correct TimeZone

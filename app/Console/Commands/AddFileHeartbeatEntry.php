@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -23,6 +24,20 @@ class AddFileHeartbeatEntry extends Command
         Storage::put($filename, $content);
 
         $this->info('File heartbeat created: '.$filename);
+
+        // Delete files older than 1 week
+        $oneWeekAgo = now()->subWeek();
+        $deleted = 0;
+        foreach (Storage::files(self::DIR) as $file) {
+            $lastModified = Carbon::createFromTimestamp(Storage::lastModified($file));
+            if ($lastModified->lt($oneWeekAgo)) {
+                Storage::delete($file);
+                $deleted++;
+            }
+        }
+        if ($deleted > 0) {
+            $this->info("Deleted {$deleted} files older than 1 week.");
+        }
 
         return Command::SUCCESS;
     }

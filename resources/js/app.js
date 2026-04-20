@@ -5,6 +5,8 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
 
+import './echo';
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'FSW-Openshift';
 
 const pages = import.meta.glob('./Pages/**/*.vue');

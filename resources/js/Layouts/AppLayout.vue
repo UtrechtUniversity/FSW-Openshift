@@ -35,7 +35,7 @@
         </v-menu>
       </template>
       <template v-else>
-        <v-btn variant="flat" color="secondary" href="/login">
+        <v-btn variant="flat" color="secondary" href="/auth/oidc/login">
           <v-icon icon="mdi-login" class="mr-1" />
           Login
         </v-btn>
@@ -86,6 +86,12 @@
         <slot />
       </v-container>
     </v-main>
+
+    <v-footer app class="text-center d-flex flex-column">
+      <div class="text-caption text-medium-emphasis">
+        Frontend v{{ versions.frontend }} | Backend v{{ versions.backend }}
+      </div>
+    </v-footer>
   </v-app>
 </template>
 
@@ -98,30 +104,43 @@ const drawer = ref(false);
 
 const appName = computed(() => page.props.appName || 'FSW-Openshift');
 const user = computed(() => page.props.auth?.user);
+const versions = computed(() => page.props.versions || { frontend: 'unknown', backend: 'unknown' });
 
 const menuItems = [
   {
     title: 'Home',
     to: '/',
     icon: 'mdi-home',
-    adminOnly: false,
+    adminOnly: true,
   },
   {
     title: 'DB Heartbeat',
     to: '/db-heartbeat',
     icon: 'mdi-heart-pulse',
-    adminOnly: false,
+    adminOnly: true,
   },
   {
     title: 'File Heartbeat',
     to: '/file-heartbeat',
     icon: 'mdi-file-document',
-    adminOnly: false,
+    adminOnly: true,
   },
   {
     title: 'Migrations',
     to: '/migrations',
     icon: 'mdi-database-sync',
+    adminOnly: true,
+  },
+  {
+    title: 'Chat',
+    to: '/chat',
+    icon: 'mdi-chat',
+    adminOnly: true,
+  },
+  {
+    title: 'Email Test',
+    to: '/email-test',
+    icon: 'mdi-email-outline',
     adminOnly: true,
   },
   {

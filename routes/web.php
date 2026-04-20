@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DbHeartbeatController;
+use App\Http\Controllers\EmailTestController;
 use App\Http\Controllers\FileHeartbeatController;
 use App\Http\Controllers\MigrationController;
 use App\Http\Controllers\RoleController;
@@ -42,10 +44,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/file-heartbeat', [FileHeartbeatController::class, 'index'])->name('file-heartbeat');
     Route::post('/file-heartbeat', [FileHeartbeatController::class, 'store'])->name('file-heartbeat.add');
 
+    // Chat routes - WebSocket/Reverb test
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+
     // Admin routes - User and Role CRUD
     Route::middleware(['can:isAdmin'])->group(function () {
         Route::resource('users', UserController::class);
+        Route::post('users/{user}/validate', [UserController::class, 'validateUser'])->name('users.validate');
         Route::resource('roles', RoleController::class);
         Route::get('migrations', [MigrationController::class, 'index'])->name('migrations.index');
+
+        // Email test routes
+        Route::get('email-test', [EmailTestController::class, 'index'])->name('email-test');
+        Route::post('email-test', [EmailTestController::class, 'store'])->name('email-test.send');
     });
 });

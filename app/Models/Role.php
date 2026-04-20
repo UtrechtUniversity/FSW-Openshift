@@ -28,6 +28,8 @@ class Role extends Model
 
     const ADMINISTRATOR = 1;
 
+    const NOT_VALIDATED = 3;
+
     protected $fillable = [
         'name',
     ];

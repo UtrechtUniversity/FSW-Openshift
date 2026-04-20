@@ -28,6 +28,15 @@
             <td>{{ user.created_at }}</td>
             <td>
               <v-btn
+                v-if="user.is_not_validated"
+                size="small"
+                variant="text"
+                icon="mdi-check-circle"
+                color="success"
+                title="Validate user"
+                @click="validateUser(user.id)"
+              />
+              <v-btn
                 size="small"
                 variant="text"
                 icon="mdi-pencil"
@@ -74,6 +83,12 @@ const changePage = (pageNumber) => {
 const deleteUser = (userId) => {
   if (confirm('Are you sure you want to delete this user?')) {
     router.delete(`/users/${userId}`);
+  }
+};
+
+const validateUser = (userId) => {
+  if (confirm('Are you sure you want to validate this user?')) {
+    router.post(`/users/${userId}/validate`);
   }
 };
 </script>

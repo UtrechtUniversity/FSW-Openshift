@@ -64,4 +64,24 @@ class User extends Authenticatable
     {
         return $this->role_id === Role::ADMINISTRATOR;
     }
+
+    /**
+     * Set default values for new users during OIDC registration.
+     * This method is called by the vendor package's PermissionsController.
+     */
+    public function setDefaults(): void
+    {
+        // Only set role for new users (not existing ones)
+        if (! $this->exists) {
+            $this->role_id = Role::NOT_VALIDATED;
+        }
+    }
+
+    /**
+     * Check if the user has the not_validated role.
+     */
+    public function isNotValidated(): bool
+    {
+        return $this->role_id === Role::NOT_VALIDATED;
+    }
 }

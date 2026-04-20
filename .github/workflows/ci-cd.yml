@@ -77,6 +77,8 @@ jobs:
         run: composer install -n --prefer-dist
 
       - name: Run Static Analysis
+        env:
+          BROADCAST_DRIVER: log
         run: ./vendor/bin/phpstan analyse --error-format=github
 
   # ============================================================================

@@ -7,6 +7,27 @@ use Illuminate\Foundation\Application;
 
 /*
 |--------------------------------------------------------------------------
+| Define POSIX Signal Constants (if missing)
+|--------------------------------------------------------------------------
+|
+| Some environments (like certain Docker containers) may not have POSIX
+| signal constants defined even when pcntl is installed. This ensures
+| they exist for packages like Laravel Reverb that depend on them.
+|
+*/
+
+if (! defined('SIGINT')) {
+    define('SIGINT', 2);
+}
+if (! defined('SIGTERM')) {
+    define('SIGTERM', 15);
+}
+if (! defined('SIGTSTP')) {
+    define('SIGTSTP', 20);
+}
+
+/*
+|--------------------------------------------------------------------------
 | Create The Application
 |--------------------------------------------------------------------------
 |

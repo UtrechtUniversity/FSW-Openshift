@@ -56,8 +56,6 @@ RUN php artisan optimize
 
 ENTRYPOINT /entrypoint.sh
 
-RUN npm install
-
 EXPOSE 8080
 EXPOSE 6050
 EXPOSE 9000

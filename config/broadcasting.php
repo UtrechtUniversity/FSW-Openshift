@@ -37,7 +37,7 @@ return [
             'app_id' => env('REVERB_APP_ID'),
             'options' => [
                 'useTLS' => true,
-                'host' => parse_url(env('APP_URL'))['host'] ?? 'openshift.docker.dev',
+                'host' => env('APP_URL') ? parse_url(env('APP_URL'))['host'] : 'openshift.docker.dev',
                 'port' => env('REVERB_PORT'),
                 'scheme' => 'https',
                 'debug' => false,

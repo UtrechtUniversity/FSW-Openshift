@@ -49,6 +49,7 @@ jobs:
       - name: Install composer dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+          BROADCAST_DRIVER: log
         run: composer install -n --prefer-dist
 
       - name: Check PHP code style
@@ -72,9 +73,12 @@ jobs:
       - name: Install composer dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+          BROADCAST_DRIVER: log
         run: composer install -n --prefer-dist
 
       - name: Run Static Analysis
+        env:
+          BROADCAST_DRIVER: log
         run: ./vendor/bin/phpstan analyse --error-format=github
 
   # ============================================================================
@@ -223,25 +227,26 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Setting version to: $VERSION"
 
-      - name: Update version in package.json (frontend)
+      - name: Update version in resources/js/frontend.json (frontend)
         if: matrix.name == 'fsw-openshift-frontend'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          jq --arg v "$VERSION" '.version = $v' package.json > package.json.tmp && mv package.json.tmp package.json
-          echo "Updated package.json version to: $VERSION"
-          cat package.json | jq '.version'
+          jq --arg v "$VERSION" '.version = $v' resources/js/frontend.json > resources/js/frontend.json.tmp && mv resources/js/frontend.json.tmp resources/js/frontend.json
+          echo "Updated resources/js/frontend.json version to: $VERSION"
+          cat resources/js/frontend.json | jq '.version'
 
-      - name: Update version in composer.json (backend)
+      - name: Update version in backend.json (backend)
         if: matrix.name == 'fsw-openshift'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          jq --arg v "$VERSION" '.version = $v' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
-          echo "Updated composer.json version to: $VERSION"
-          cat composer.json | jq '.version'
+          jq --arg v "$VERSION" '.version = $v' backend.json > backend.json.tmp && mv backend.json.tmp backend.json
+          echo "Updated backend.json version to: $VERSION"
+          cat backend.json | jq '.version'
 
       - name: Install dependencies
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.COMPOSER_AUTH }}"} }'
+          BROADCAST_DRIVER: log
         run: composer install --prefer-dist --no-suggest --no-progress 
           && npm install && npm run build && npm prune --production
 

@@ -27,12 +27,16 @@ RUN  docker-php-ext-enable mcrypt
 # Install system dependencies
 RUN apt-get update && apt-get install -y libpq-dev postgresql-client
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
-RUN docker-php-ext-install pdo intl pdo_pgsql pgsql
+RUN docker-php-ext-install pdo intl pdo_pgsql pgsql pcntl
+RUN docker-php-ext-configure pcntl --enable-pcntl
 
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get clean -y
+
+# Install composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # set corrent TimeZone
 ENV TZ=Europe/Amsterdam
@@ -42,6 +46,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY .. /var/www
 
 COPY ./openshift/openshift.env /var/www/.env
+
+# Install production dependencies only (excludes dev packages like spatie/laravel-ray)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 RUN chmod -R a+rw /var/www/storage
 RUN chmod -R a+rw /var/www/bootstrap/cache
@@ -54,8 +61,6 @@ RUN chmod ugo+x /entrypoint.sh
 RUN php artisan optimize
 
 ENTRYPOINT /entrypoint.sh
-
-RUN npm install
 
 EXPOSE 8080
 EXPOSE 6050

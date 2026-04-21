@@ -14,6 +14,15 @@
     <!-- Include Plausible.IO script for privacy friendly stats -->
     <script defer data-domain="<?= parse_url(env('APP_URL'), PHP_URL_HOST) ?>" src="https://plausible.io/js/plausible.js"></script>
 
+    <!-- Reverb/Echo configuration (runtime injected) -->
+    <script>
+        window.reverbConfig = {
+            key: "{{ config('broadcasting.connections.reverb.key') }}",
+            port: {{ config('broadcasting.connections.reverb.options.port', 443) }},
+            scheme: "{{ config('broadcasting.connections.reverb.options.scheme', 'https') }}"
+        };
+    </script>
+
     @inertiaHead
 </head>
 <body>

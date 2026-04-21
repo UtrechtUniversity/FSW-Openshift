@@ -3,15 +3,20 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
+// Use runtime config from blade template, fallback to Vite env for local dev
+const reverbConfig = window.reverbConfig || {};
+const reverbKey = reverbConfig.key || import.meta.env.VITE_REVERB_APP_KEY;
+const reverbPort = reverbConfig.port || import.meta.env.VITE_REVERB_PORT || 443;
+const reverbScheme = reverbConfig.scheme || import.meta.env.VITE_REVERB_SCHEME || 'https';
+
 window.Echo = new Echo({
     broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
+    key: reverbKey,
     wsHost: window.location.hostname,
     wssHost: window.location.hostname,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 6001,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 6001,
-    // forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-    forceTLS: false,
+    wsPort: reverbPort,
+    wssPort: reverbPort,
+    forceTLS: reverbScheme === 'https',
     enabledTransports: ['ws', 'wss'],
 });
 

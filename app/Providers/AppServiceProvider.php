@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\URL;
-use UU\HTSAppTeam\LaravelBase\Http\Controllers\OIDC\LoginController as VendorLoginController;
 use App\Http\Controllers\OIDC\LoginController as DebugLoginController;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
+use UU\HTSAppTeam\LaravelBase\Http\Controllers\OIDC\LoginController as VendorLoginController;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(config('hts-appteam.force_https')) {
+        if (config('hts-appteam.force_https')) {
             URL::forceScheme('https');
         }
     }

@@ -61,7 +61,7 @@ export default defineConfig({
         cors: true,
         origin: `https://openshift.docker.dev:${port}`,
         hmr: {
-            host: 'openshift.docker.dev',
+            host: host,
             protocol: 'wss'
         },
     },

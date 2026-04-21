@@ -89,7 +89,7 @@
 
     <v-footer app class="text-center d-flex flex-column">
       <div class="text-caption text-medium-emphasis">
-        Frontend v{{ frontendVersion }} | Backend v{{ backendVersion }}
+        Version v{{ version }}
       </div>
     </v-footer>
   </v-app>
@@ -98,15 +98,13 @@
 <script setup>
 import { usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-import versionInfo from '../frontend.json';
 
 const page = usePage();
 const drawer = ref(false);
 
 const appName = computed(() => page.props.appName || 'FSW-Openshift');
 const user = computed(() => page.props.auth?.user);
-const frontendVersion = versionInfo.version || 'unknown';
-const backendVersion = computed(() => page.props.backendVersion || 'unknown');
+const version = computed(() => page.props.version || 'unknown');
 
 const menuItems = [
   {

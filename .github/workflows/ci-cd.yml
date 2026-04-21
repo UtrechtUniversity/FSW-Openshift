@@ -154,7 +154,7 @@ jobs:
             storage/logs/
 
   # ============================================================================
-  # STAGE 3: Build and Publish Docker Images
+  # STAGE 3: Build and Publish Docker Image
   # ============================================================================
   build:
     needs: [laravel-tests]
@@ -166,15 +166,6 @@ jobs:
       packages: write
       attestations: write
       id-token: write
-    strategy:
-      matrix:
-        include:
-          - image: ghcr.io/utrechtuniversity/fsw-openshift
-            name: fsw-openshift
-            dockerfile: openshift/openshift.dockerfile
-          - image: ghcr.io/utrechtuniversity/fsw-openshift-frontend
-            name: fsw-openshift-frontend
-            dockerfile: openshift/frontend.dockerfile
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -195,7 +186,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ matrix.image }}
+          images: ghcr.io/utrechtuniversity/fsw-openshift
           tags: |
             type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
             type=raw,value=master,enable=${{ github.ref == 'refs/heads/master' }}
@@ -226,21 +217,12 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Setting version to: $VERSION"
 
-      - name: Update version in resources/js/frontend.json (frontend)
-        if: matrix.name == 'fsw-openshift-frontend'
+      - name: Update version in backend.json
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          jq --arg v "$VERSION" '.version = $v' resources/js/frontend.json > resources/js/frontend.json.tmp && mv resources/js/frontend.json.tmp resources/js/frontend.json
-          echo "Updated resources/js/frontend.json version to: $VERSION"
-          cat resources/js/frontend.json | jq '.version'
-
-      - name: Update version in backend.json (backend)
-        if: matrix.name == 'fsw-openshift'
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          jq --arg v "$VERSION" '.version = $v' backend.json > backend.json.tmp && mv backend.json.tmp backend.json
-          echo "Updated backend.json version to: $VERSION"
-          cat backend.json | jq '.version'
+          jq --arg v "$VERSION" '.version = $v' version.json > version.json.tmp && mv version.json.tmp version.json
+          echo "Updated version.json version to: $VERSION"
+          cat version.json | jq '.version'
 
       - name: Install dependencies
         env:
@@ -249,12 +231,12 @@ jobs:
         run: composer install --prefer-dist --no-suggest --no-progress 
           && npm install && npm run build && npm prune --production
 
-      - name: Build and push Docker backend image
+      - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
+          file: openshift/openshift.dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -263,5 +245,5 @@ jobs:
         uses: actions/delete-package-versions@v5
         with:
           delete-only-untagged-versions: true
-          package-name: ${{ matrix.name }}
+          package-name: fsw-openshift
           package-type: "container"

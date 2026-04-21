@@ -58,8 +58,6 @@ RUN php artisan key:generate
 COPY ./openshift/openshift-entrypoint.sh /entrypoint.sh
 RUN chmod ugo+x /entrypoint.sh
 
-RUN php artisan optimize
-
 ENTRYPOINT /entrypoint.sh
 
 EXPOSE 8080

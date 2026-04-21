@@ -45,6 +45,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # copy webapp files
 COPY .. /var/www
 
+# Remove Vite dev server hot file if it exists (prevents assets loading from dev URL)
+RUN rm -f /var/www/public/hot
+
 COPY ./openshift/openshift.env /var/www/.env
 
 # Install production dependencies only (excludes dev packages like spatie/laravel-ray)
